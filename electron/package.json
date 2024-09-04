@@ -1,0 +1,57 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "electron src/main.js --mode=dev",
+    "dev": "electron src/main.js --mode=dev",
+    "start:prod": "electron src/main.js",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^32.0.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.yourcompany.electronapp",
+    "npmRebuild": false,
+    "asar": true,
+    "productName": "ElectronApp",
+    "files": [
+      "src/**/*",
+      "ui_dist/**/*",
+      "node_modules/**/*",
+      "!**/node_modules/**",
+      "package.json",
+      "!**/node_modules/**/{test,tests,example,examples}/**",
+      "!**/node_modules/**/{*.md,*.markdown}",
+      "!**/node_modules/**/{.npmignore,.gitignore}",
+      "!**/node_modules/.bin"
+    ],
+    "asarUnpack": [
+      "**/node_modules/electron-builder/**",
+      "**/node_modules/electron/**"
+    ],
+    "extraResources": [],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icons/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "icons/icons"
+    }
+  }
+}
