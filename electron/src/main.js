@@ -74,7 +74,7 @@ app.whenReady().then(() => {
       y: data.y,
     };
 
-    console.log("newBounds", newBounds);
+    // console.log("newBounds", newBounds);
     if (data.name === "tab1" && tab1) {
       // tab1.setBounds({
       //   ...tab1.getBounds(),
@@ -96,13 +96,13 @@ app.whenReady().then(() => {
     event.sender.send("fromMain", "Hello from Main");
   });
 
-  overlayWindow.webContents.openDevTools();
+  // overlayWindow.webContents.openDevTools();
 
   const showTabs = true;
 
   if (showTabs) {
     tab1 = createTab({
-      url: "http://localhost:6060",
+      url: "https://rakibtg.com",
       x: 200,
       y: 40,
       width: 296,
@@ -110,7 +110,7 @@ app.whenReady().then(() => {
     });
 
     tab2 = createTab({
-      url: "http://localhost:6060",
+      url: "https://react.dev",
       x: 504,
       y: 40,
       width: 296,
