@@ -166,6 +166,9 @@ function OverlayWindowUi() {
     }
   };
 
+  const [viewSidebar, setViewSidebar] = createSignal(true);
+  const toggleSidebar = () => setViewSidebar(!viewSidebar());
+
   // const handleResize = (deltaX: number) => {
   //   const containerWidth = document.documentElement.clientWidth;
   //   const newLeftWidth =
@@ -178,22 +181,27 @@ function OverlayWindowUi() {
   // };
 
   return (
-    <div class="w-screen h-screen bg-slate-500 text-white flex flex-col">
+    <div class="w-screen h-screen bg-slate-600 text-white flex flex-col">
       <div class="bg-neutral-600 text-center">
+        <button class="p-2 pl-4" onClick={toggleSidebar}>
+          Toggle Sidebar
+        </button>
         <input class="w-5/6 p-2" value="https://google.com" type="text" />
         <button class="p-2 pl-4">Go</button>
       </div>
 
-      <div class="flex bg-slate-600 h-full">
-        {/* <div
-          class="flex-shrink-0 bg-slate-400"
+      <div class="flex  h-full">
+        <div
+          class="flex-shrink-0 border-r-1 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu mr-1.5"
           style={{
-            width: "260px",
+            width: viewSidebar() ? "260px" : "0px",
+            opacity: viewSidebar() ? 1 : 0,
+            "user-select": viewSidebar() ? "auto" : "none",
           }}
         >
           sidebar
-        </div> */}
-        <div class="flex w-full h-full p-1.5">
+        </div>
+        <div class="flex w-full h-full p-1.5 pb-2 pl-0">
           <ViewPortArea width={tab1Width()} name="tab1" />
           <Draggable onResize={(deltaX) => handleResize(deltaX, 1)} />
           <ViewPortArea width={tab2Width()} name="tab2" />
