@@ -35,10 +35,18 @@ const createTab = ({ url, x, y, width, height }) => {
 
 app.whenReady().then(() => {
   mainBaseWindow = new BaseWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 700,
     backgroundColor: "#000",
     frame: false,
+    roundedCorners: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: true,
+    titleBarOverlay: {
+      color: "#475569",
+      symbolColor: "#fff",
+      height: 40,
+    },
   });
 
   mainBaseWindow.setBackgroundColor("#000");
@@ -110,7 +118,7 @@ app.whenReady().then(() => {
     });
 
     tab2 = createTab({
-      url: "https://react.dev",
+      url: "https://duck.com/",
       x: 504,
       y: 40,
       width: 296,
