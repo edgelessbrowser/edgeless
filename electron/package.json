@@ -53,5 +53,8 @@
       "target": "AppImage",
       "icon": "icons/icons"
     }
+  },
+  "dependencies": {
+    "electron-context-menu": "^4.0.4"
   }
 }
