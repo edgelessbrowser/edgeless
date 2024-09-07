@@ -95,7 +95,9 @@ app.whenReady().then(() => {
     useContentSize: true,
   });
 
-  getMaximizedMonitorInfo(mainBaseWindow);
+  if (isWindows) {
+    getMaximizedMonitorInfo(mainBaseWindow);
+  }
 
   // Set based window bounds on base ui view panel to fix windows screen width issue and a fixed border.
 
