@@ -14,7 +14,7 @@ function Sidebar() {
 
   return (
     <div
-      class="flex-shrink-0 border-r-1 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu mr-1.5"
+      class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu mr-0"
       style={{
         width: viewSidebar() ? "260px" : "0px",
         opacity: viewSidebar() ? 1 : 0,
