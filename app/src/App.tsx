@@ -1,13 +1,36 @@
-import { createSignal, type Component } from "solid-js";
+import { createSignal, type Component, onMount } from "solid-js";
 import Draggable from "./components/Draggable";
 import ViewPanel from "./components/ViewPanel";
 import Sidebar from "./components/Sidebar";
 import TopHeader from "./components/TopHeader";
 
+import BrowserEvents from "./utils/browserEvents";
+
 const App: Component = () => {
   const [tab1Width, setTab1Width] = createSignal(33); // Initial width for tab1
   const [tab2Width, setTab2Width] = createSignal(33); // Initial width for tab2
   const [tab3Width, setTab3Width] = createSignal(33); // Initial width for tab3
+
+  const [focuedTab, setFocusedTab] = createSignal("");
+
+  const [baseWindowSize, setBaseWindowSize] = createSignal({
+    width: "100vw",
+    height: "100vh",
+  });
+
+  onMount(() => {
+    BrowserEvents.on("baseWindow:sizeUpdate", (data) => {
+      console.log("Received Bounds:", data);
+      setBaseWindowSize({
+        width: data.width + "px",
+        height: data.height + "px",
+      });
+    });
+
+    BrowserEvents.on("tab:focused", (data) => {
+      setFocusedTab(data.name);
+    });
+  });
 
   const handleResize = (deltaX: number, tab: number) => {
     const containerWidth = window.innerWidth; // Get the width of the entire container
@@ -38,17 +61,35 @@ const App: Component = () => {
   };
 
   return (
-    <div class="w-screen h-screen bg-slate-600 text-white flex flex-col">
+    <div
+      style={{
+        width: baseWindowSize().width,
+        height: baseWindowSize().height,
+      }}
+      class="bg-slate-600 text-white flex flex-col overflow-hidden"
+    >
       <TopHeader />
 
       <div class="flex h-full">
         <Sidebar />
-        <div class="flex w-full h-full p-1.5 pb-2 pl-0 pt-0">
-          <ViewPanel width={tab1Width()} name="tab1" />
+        <div class="flex w-full h-full p-2 pt-1">
+          <ViewPanel
+            width={tab1Width()}
+            name="tab1"
+            active={focuedTab() === "tab1"}
+          />
           <Draggable onResize={(deltaX) => handleResize(deltaX, 1)} />
-          <ViewPanel width={tab2Width()} name="tab2" />
+          <ViewPanel
+            width={tab2Width()}
+            name="tab2"
+            active={focuedTab() === "tab2"}
+          />
           <Draggable onResize={(deltaX) => handleResize(deltaX, 2)} />
-          <ViewPanel width={tab3Width()} name="tab3" />
+          <ViewPanel
+            width={tab3Width()}
+            name="tab3"
+            active={focuedTab() === "tab3"}
+          />
         </div>
       </div>
     </div>
