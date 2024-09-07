@@ -42,7 +42,7 @@ function Draggable(props: DraggableProps) {
   return (
     <div
       onMouseDown={handleMouseDown}
-      class="select-none bg-slate-600 w-1.5 cursor-col-resize hover:bg-slate-500 transition-colors flex-shrink-0"
+      class="select-none bg-slate-600 w-2 cursor-col-resize hover:bg-slate-500 transition-colors flex-shrink-0"
     />
   );
 }
