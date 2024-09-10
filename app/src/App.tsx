@@ -72,7 +72,7 @@ const App: Component = () => {
 
       <div class="flex h-full">
         <Sidebar />
-        <div class="flex w-full h-full p-2 pt-1">
+        <div class="flex w-full h-full pt-0.5">
           <ViewPanel
             width={tab1Width()}
             name="tab1"
