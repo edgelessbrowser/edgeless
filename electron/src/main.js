@@ -113,7 +113,7 @@ app.whenReady().then(() => {
   mainBaseWindow.contentView.addChildView(overlayWindow);
 
   if (isDev) {
-    overlayWindow.webContents.loadURL("http://localhost:3000");
+    overlayWindow.webContents.loadURL("http://localhost:6080");
   } else {
     overlayWindow.webContents.loadFile(
       path.join(__dirname, "../ui_dist/index.html")
@@ -145,7 +145,7 @@ app.whenReady().then(() => {
     });
   }
 
-  ipcMain.on("tab:seperator", (event, data) => {
+  ipcMain.on("TAB:BOUND_UPDATE", (event, data) => {
     const newBounds = {
       height: data.height,
       width: data.width,
