@@ -1,6 +1,7 @@
 import { createSignal, onMount, onCleanup, createEffect } from "solid-js";
 
 import BrowserEvents from "../utils/browserEvents";
+import debounce from "../utils/debounce";
 
 function ViewPanel(props: { width: number; name: string; active: boolean }) {
   let tabRef: HTMLDivElement | undefined;
@@ -31,12 +32,16 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
         height: bounds.height,
       };
       setTabBounds(formattedBounds);
-      BrowserEvents.send("tab:seperator", {
+      BrowserEvents.send("TAB:BOUND_UPDATE", {
         ...formattedBounds,
         name: props.name,
       });
     }
   };
+
+  const debounceBoundResizeHandler = debounce(() => {
+    updateBounds();
+  }, 6);
 
   onMount(() => {
     if (tabRef) {
@@ -44,9 +49,7 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
       updateBounds();
 
       // Create a ResizeObserver to watch for changes in the size of the div
-      const resizeObserver = new ResizeObserver(() => {
-        updateBounds();
-      });
+      const resizeObserver = new ResizeObserver(debounceBoundResizeHandler);
 
       // Start observing the element
       if (tabRef) {
