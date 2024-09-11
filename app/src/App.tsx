@@ -7,7 +7,7 @@ import TopHeader from "./components/TopHeader";
 import BrowserEvents from "./utils/browserEvents";
 
 const App: Component = () => {
-  const [tab1Width, setTab1Width] = createSignal(33); // Initial width for tab1
+  const [tab1Width, setTab1Width] = createSignal(100); // Initial width for tab1
   const [tab2Width, setTab2Width] = createSignal(33); // Initial width for tab2
   const [tab3Width, setTab3Width] = createSignal(33); // Initial width for tab3
 
@@ -33,7 +33,7 @@ const App: Component = () => {
   });
 
   const handleResize = (deltaX: number, tab: number) => {
-    const containerWidth = window.innerWidth; // Get the width of the entire container
+    const containerWidth = window.innerWidth;
 
     if (tab === 1) {
       const newTab1Width = Math.max(
