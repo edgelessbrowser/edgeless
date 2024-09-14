@@ -3,8 +3,8 @@ import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import contextMenu from "electron-context-menu";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const projectDirname = dirname(filename);
 
 const isDev = process.argv.includes("--mode=dev");
 const isWindows = process.platform === "win32";
@@ -41,9 +41,9 @@ function getMaximizedMonitorInfo(mainWindow) {
 let mainBaseWindow;
 let overlayWindow;
 
-let tab1;
-let tab2;
-let tab3;
+// let tab1;
+// let tab2;
+// let tab3;
 
 const createTab = ({ url, x, y, width, height, name }) => {
   const tab = new WebContentsView({
@@ -83,10 +83,8 @@ app.whenReady().then(() => {
     height: 700,
     backgroundColor: "#475569",
     frame: false,
-    // roundedCorners: false,
     titleBarStyle: "hidden",
     titleBarOverlay: true,
-    // thickFrame: false,
     titleBarOverlay: {
       color: "#475569",
       symbolColor: "#fff",
@@ -107,16 +105,17 @@ app.whenReady().then(() => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, "browserPreload.js"),
+      preload: path.join(projectDirname, "browserPreload.js"),
     },
   });
+  overlayWindow.setBackgroundColor("#475569");
   mainBaseWindow.contentView.addChildView(overlayWindow);
 
   if (isDev) {
     overlayWindow.webContents.loadURL("http://localhost:6080");
   } else {
     overlayWindow.webContents.loadFile(
-      path.join(__dirname, "../ui_dist/index.html")
+      path.join(projectDirname, "../ui_dist/index.html")
     );
   }
 
@@ -153,67 +152,89 @@ app.whenReady().then(() => {
       y: data.y,
     };
 
-    // console.log("newBounds", newBounds);
-    if (data.name === "tab1" && tab1) {
-      // tab1.setBounds({
-      //   ...tab1.getBounds(),
-      //   width: data.width,
-      // });
-      tab1.setBounds({
-        ...tab1.getBounds(),
-        ...newBounds,
-      });
-    } else if (data.name === "tab2" && tab2) {
-      tab2.setBounds({
-        ...tab2.getBounds(),
-        ...newBounds,
-        // width: data.width,
-        // x: data.x,
-      });
-    } else if (data.name === "tab3" && tab3) {
-      tab3.setBounds({
-        ...tab3.getBounds(),
-        ...newBounds,
-        // width: data.width,
-        // x: data.x,
-      });
+    // if (data.name === "tab1" && tab1) {
+    //   tab1.setBounds({
+    //     ...tab1.getBounds(),
+    //     ...newBounds,
+    //   });
+    // }
+    // else if (data.name === "tab2" && tab2) {
+    //   tab2.setBounds({
+    //     ...tab2.getBounds(),
+    //     ...newBounds,
+    //   });
+    // } else if (data.name === "tab3" && tab3) {
+    //   tab3.setBounds({
+    //     ...tab3.getBounds(),
+    //     ...newBounds,
+    //   });
+    // }
+
+    // event.sender.send("fromMain", "Hello from Main");
+  });
+
+  let panels = [];
+  ipcMain.on("TAB:CREATE", (event, panel) => {
+    const { id } = panel;
+
+    // Ensure no lingering panels with the same id before creating a new one
+    panels = panels.filter((p) => p.id !== id);
+
+    panels.push({
+      id,
+      wcv: createTab({
+        url: "https://news.ycombinator.com",
+        x: 350,
+        y: 50,
+        width: 600,
+        height: 600,
+        name: id,
+      }),
+    });
+  });
+
+  ipcMain.on("TAB:REMOVE", (event, panelId) => {
+    const panel = panels.find((panel) => panel.id === panelId);
+    console.log("destroy panel:", panel);
+
+    if (panel.wcv && panel.wcv.webContents) {
+      mainBaseWindow.contentView.removeChildView(panel.wcv);
+      panel.wcv.webContents.destroy();
     }
 
-    event.sender.send("fromMain", "Hello from Main");
+    panels = panels.filter((panel) => panel.id !== panelId);
   });
 
   // overlayWindow.webContents.openDevTools();
 
-  const showTabs = true;
+  // const showTabs = false;
 
-  if (showTabs) {
-    tab1 = createTab({
-      url: "https://news.ycombinator.com",
-      x: 200,
-      y: 40,
-      width: 296,
-      height: 540,
-      name: "tab1",
-    });
-
-    tab2 = createTab({
-      url: "https://duck.com/",
-      x: 504,
-      y: 40,
-      width: 296,
-      height: 540,
-      name: "tab2",
-    });
-
-    tab3 = createTab({
-      url: "https://react.dev/",
-      x: 504,
-      y: 40,
-      width: 296,
-      height: 540,
-      name: "tab3",
-    });
-  }
+  // if (showTabs) {
+  // tab1 = createTab({
+  //   url: "https://news.ycombinator.com",
+  //   x: 200,
+  //   y: 40,
+  //   width: 296,
+  //   height: 540,
+  //   name: "tab1",
+  // });
+  // tab2 = createTab({
+  //   url: "https://duck.com/",
+  //   x: 504,
+  //   y: 40,
+  //   width: 296,
+  //   height: 540,
+  //   name: "tab2",
+  // });
+  // tab3 = createTab({
+  //   url: "https://react.dev/",
+  //   x: 504,
+  //   y: 40,
+  //   width: 296,
+  //   height: 540,
+  //   name: "tab3",
+  // });
+  // }
 });
 
 app.on("window-all-closed", () => {
