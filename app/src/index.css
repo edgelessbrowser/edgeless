@@ -12,6 +12,12 @@
   }
 }
 
+html,
+body {
+  overflow: hidden;
+  background-color: #475569;
+}
+
 body {
   margin: 0px;
   padding: 0px;
