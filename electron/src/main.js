@@ -3,13 +3,12 @@ import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import contextMenu from "electron-context-menu";
 
-const filename = fileURLToPath(import.meta.url);
-const projectDirname = dirname(filename);
+const projectDirname = dirname(fileURLToPath(import.meta.url));
 
-const isDev = process.argv.includes("--mode=dev");
-const isWindows = process.platform === "win32";
-const isMacOs = process.platform === "darwin";
 const isLinux = process.platform === "linux";
+const isMacOs = process.platform === "darwin";
+const isWindows = process.platform === "win32";
+const isDev = process.argv.includes("--mode=dev");
 
 function getMaximizedMonitorInfo(mainWindow) {
   mainWindow.on("maximize", () => {
@@ -41,40 +40,36 @@ function getMaximizedMonitorInfo(mainWindow) {
 let mainBaseWindow;
 let overlayWindow;
 
-// let tab1;
-// let tab2;
-// let tab3;
-
-const createTab = ({ url, x, y, width, height, name }) => {
-  const tab = new WebContentsView({
+const createPanel = ({ url, x, y, width, height, name }) => {
+  const panel = new WebContentsView({
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
   contextMenu({
-    window: tab.webContents, // Specify the webContents where the context menu should be applied
+    window: panel.webContents, // Specify the webContents where the context menu should be applied
     showSaveImageAs: true, // Example: Enable "Save Image As..." option
     showInspectElement: true, // Example: Enable "Inspect Element" option for debugging
     showSearchWithGoogle: true, // Example: Enable "Search with Google" option
   });
 
-  mainBaseWindow.contentView.addChildView(tab);
+  mainBaseWindow.contentView.addChildView(panel);
 
-  tab.webContents.loadURL(url);
+  panel.webContents.loadURL(url);
 
-  tab.setBounds({
+  panel.setBounds({
     width,
     height,
     x,
     y,
   });
 
-  tab.webContents.on("focus", () => {
-    overlayWindow.webContents.send("tab:focused", { name });
+  panel.webContents.on("focus", () => {
+    overlayWindow.webContents.send("panel:focused", { name });
   });
 
-  return tab;
+  return panel;
 };
 
 app.whenReady().then(() => {
@@ -96,8 +91,6 @@ app.whenReady().then(() => {
   if (isWindows) {
     getMaximizedMonitorInfo(mainBaseWindow);
   }
-
-  // Set based window bounds on base ui view panel to fix windows screen width issue and a fixed border.
 
   mainBaseWindow.setBackgroundColor("#475569");
 
@@ -144,7 +137,7 @@ app.whenReady().then(() => {
     });
   }
 
-  ipcMain.on("TAB:BOUND_UPDATE", (event, data) => {
+  ipcMain.on("PANEL:BOUND_UPDATE", (event, data) => {
     const newBounds = {
       height: data.height,
       width: data.width,
@@ -152,38 +145,24 @@ app.whenReady().then(() => {
       y: data.y,
     };
 
-    // if (data.name === "tab1" && tab1) {
-    //   tab1.setBounds({
-    //     ...tab1.getBounds(),
-    //     ...newBounds,
-    //   });
-    // }
-    // else if (data.name === "tab2" && tab2) {
-    //   tab2.setBounds({
-    //     ...tab2.getBounds(),
-    //     ...newBounds,
-    //   });
-    // } else if (data.name === "tab3" && tab3) {
-    //   tab3.setBounds({
-    //     ...tab3.getBounds(),
-    //     ...newBounds,
-    //   });
-    // }
-
-    // event.sender.send("fromMain", "Hello from Main");
+    panels.forEach((panel) => {
+      if (panel.id === data.id) {
+        panel.wcv.setBounds({
+          ...panel.wcv.getBounds(),
+          ...newBounds,
+        });
+      }
+    });
   });
 
   let panels = [];
   ipcMain.on("TAB:CREATE", (event, panel) => {
     const { id } = panel;
-
-    // Ensure no lingering panels with the same id before creating a new one
     panels = panels.filter((p) => p.id !== id);
-
     panels.push({
       id,
-      wcv: createTab({
-        url: "https://news.ycombinator.com",
+      wcv: createPanel({
+        url: "http://localhost:6060/",
         x: 350,
         y: 50,
         width: 600,
@@ -206,35 +185,6 @@ app.whenReady().then(() => {
   });
 
   // overlayWindow.webContents.openDevTools();
-
-  // const showTabs = false;
-
-  // if (showTabs) {
-  // tab1 = createTab({
-  //   url: "https://news.ycombinator.com",
-  //   x: 200,
-  //   y: 40,
-  //   width: 296,
-  //   height: 540,
-  //   name: "tab1",
-  // });
-  // tab2 = createTab({
-  //   url: "https://duck.com/",
-  //   x: 504,
-  //   y: 40,
-  //   width: 296,
-  //   height: 540,
-  //   name: "tab2",
-  // });
-  // tab3 = createTab({
-  //   url: "https://react.dev/",
-  //   x: 504,
-  //   y: 40,
-  //   width: 296,
-  //   height: 540,
-  //   name: "tab3",
-  // });
-  // }
 });
 
 app.on("window-all-closed", () => {
