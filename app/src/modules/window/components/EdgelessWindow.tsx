@@ -18,7 +18,7 @@ function EdgelessWindow({ children }: EdgelessWindowProps) {
       });
     });
 
-    BrowserEvents.on("tab:focused", (data) => {
+    BrowserEvents.on("panel:focused", (data) => {
       ViewPanelState.setFocusedTab(data.name);
     });
   });
