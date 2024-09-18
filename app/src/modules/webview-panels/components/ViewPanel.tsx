@@ -1,10 +1,9 @@
+import BrowserEvents from "../../../utils/browserEvents";
+import ViewPanelState, { PanelInterface } from "../store/ViewPanelState";
 import { createSignal, onMount, onCleanup, createEffect } from "solid-js";
 
-import BrowserEvents from "../../../utils/browserEvents";
-import ViewPanelState from "../store/ViewPanelState";
-
-function ViewPanel(props: { width: number; name: string; active: boolean }) {
-  let tabRef: HTMLDivElement | undefined;
+function ViewPanel(props: { panel?: PanelInterface }) {
+  let panelRef: HTMLDivElement | undefined;
 
   const [tabBounds, setTabBounds] = createSignal<{
     x: number;
@@ -18,13 +17,12 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
     height: 0,
   });
 
-  const [isActiveWindow, setIsActiveWindow] = createSignal(false);
-
   const [widthPercent, setWidthPercent] = createSignal("100%");
+  const [isFocusedPanel, setIsFocusedPanel] = createSignal(false);
 
   const updateBounds = () => {
-    if (tabRef) {
-      const bounds = tabRef.getBoundingClientRect();
+    if (panelRef) {
+      const bounds = panelRef.getBoundingClientRect();
       const formattedBounds = {
         x: bounds.x,
         y: bounds.y,
@@ -32,27 +30,20 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
         height: bounds.height,
       };
       setTabBounds(formattedBounds);
-      BrowserEvents.send("TAB:BOUND_UPDATE", {
+      BrowserEvents.send("PANEL:BOUND_UPDATE", {
         ...formattedBounds,
-        name: props.name,
+        id: props.panel?.id,
       });
     }
   };
 
   onMount(() => {
-    if (tabRef) {
-      // Call updateBounds initially to set initial bounds
+    if (panelRef) {
       updateBounds();
-
-      // Create a ResizeObserver to watch for changes in the size of the div
       const resizeObserver = new ResizeObserver(updateBounds);
-
-      // Start observing the element
-      if (tabRef) {
-        resizeObserver.observe(tabRef);
+      if (panelRef) {
+        resizeObserver.observe(panelRef);
       }
-
-      // Cleanup the observer when the component is unmounted
       onCleanup(() => {
         resizeObserver.disconnect();
       });
@@ -60,11 +51,13 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
   });
 
   createEffect(() => {
-    setWidthPercent(`${props.width}%`);
+    setWidthPercent(`${props.panel?.width}%`);
   });
 
   createEffect(() => {
-    setIsActiveWindow(props.active);
+    if (ViewPanelState.highlightFocusedPanel()) {
+      setIsFocusedPanel(props.panel?.isFocused ?? false);
+    }
   });
 
   return (
@@ -76,7 +69,7 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
     >
       <div
         class="bg-slate-700 p-4 min-w-52 w-full h-full"
-        ref={(el) => (tabRef = el)}
+        ref={(el) => (panelRef = el)}
       >
         <p class="text-xs mb-2">{widthPercent()}</p>
         <pre class="text-xs">{JSON.stringify(tabBounds(), null, 2)}</pre>
@@ -85,7 +78,7 @@ function ViewPanel(props: { width: number; name: string; active: boolean }) {
           {JSON.stringify(ViewPanelState.panels, null, 2)}
         </pre>
       </div>
-      {isActiveWindow() && (
+      {isFocusedPanel() && (
         <div class="absolute top-0 left-0 right-0 -mt-1.5 px-0.5 select-none">
           <div class="bg-slate-400/80 hover:bg-slate-400 h-1 rounded"></div>
         </div>
