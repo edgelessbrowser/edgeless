@@ -27,7 +27,7 @@ const App: Component = () => {
       });
     });
 
-    BrowserEvents.on("tab:focused", (data) => {
+    BrowserEvents.on("panel:focused", (data) => {
       setFocusedTab(data.name);
     });
   });
