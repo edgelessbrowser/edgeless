@@ -1,5 +1,5 @@
-import { createSignal, createRoot } from "solid-js";
 import { createStore } from "solid-js/store";
+import { createSignal, createRoot } from "solid-js";
 
 export interface PanelInterface {
   id?: string;
@@ -76,6 +76,11 @@ function ViewPanelState() {
     updatePanel(id, "isVisible", true);
   };
 
+  const highlightFocusedPanel = () => {
+    // return panels.length > 1;
+    return false;
+  };
+
   const getVisiblePanel = (): PanelInterface | undefined => {
     return panels.find((panel) => panel.isVisible);
   };
@@ -91,6 +96,7 @@ function ViewPanelState() {
     updatePanel,
     setAsVisible,
     getVisiblePanel,
+    highlightFocusedPanel,
   };
 }
 
