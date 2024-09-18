@@ -34,12 +34,7 @@ function ViewPanelContainer() {
 
   return (
     <div class="flex w-full h-full pt-0.5">
-      <ViewPanel
-        width={ViewPanelState.getVisiblePanel()?.width ?? 100}
-        name={(ViewPanelState.getVisiblePanel()?.index ?? 0).toString()}
-        // active={ViewPanelState.getVisiblePanel()?.isFocused ?? false}
-        active={false}
-      />
+      <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
       {/* <For each={ViewPanelState.panels}>
         {(panel) => (
           <>
