@@ -47,6 +47,8 @@ const createPanel = ({ url, x, y, width, height, name }) => {
     },
   });
 
+  panel.setBackgroundColor("#475569");
+
   contextMenu({
     window: panel.webContents, // Specify the webContents where the context menu should be applied
     showSaveImageAs: true, // Example: Enable "Save Image As..." option
@@ -105,10 +107,10 @@ app.whenReady().then(() => {
   mainBaseWindow.contentView.addChildView(overlayWindow);
 
   if (isDev) {
-    overlayWindow.webContents.loadURL("http://localhost:6080");
+    overlayWindow.webContents.loadURL("http://localhost:6080#page=browser");
   } else {
     overlayWindow.webContents.loadFile(
-      path.join(projectDirname, "../ui_dist/index.html")
+      path.join(projectDirname, "../ui_dist/index.html#page=browser")
     );
   }
 
@@ -162,7 +164,7 @@ app.whenReady().then(() => {
     panels.push({
       id,
       wcv: createPanel({
-        url: "http://localhost:6060/",
+        url: "http://localhost:6080#page=default-page",
         x: 350,
         y: 50,
         width: 600,
