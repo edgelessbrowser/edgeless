@@ -1,20 +1,20 @@
-import { type Component } from "solid-js";
-import Sidebar from "./modules/sidebar/components/Sidebar";
-import WindowToolbar from "./modules/toolbar/components/WindowToolbar";
-import EdgelessWindow from "./modules/window/components/EdgelessWindow";
-import ViewPanelContainer from "./modules/webview-panels/components/ViewPanelContainer";
-import Box from "./modules/ui/components/Box";
+import { type Component, Switch, Match } from "solid-js";
+import { decodeHashParams } from "./modules/pages/utils/parseHashParams";
+import EdgelessBrowserRootView from "./modules/pages/components/EdgelessBrowserRootView";
+import DefaultPage from "./modules/pages/components/DefaultPage";
 
 const App: Component = () => {
-  return (
-    <EdgelessWindow>
-      <WindowToolbar />
+  const page = decodeHashParams("page");
 
-      <Box class="flex h-full">
-        <Sidebar />
-        <ViewPanelContainer />
-      </Box>
-    </EdgelessWindow>
+  return (
+    <Switch>
+      <Match when={page === "browser"}>
+        <EdgelessBrowserRootView />
+      </Match>
+      <Match when={page === "default-page"}>
+        <DefaultPage />
+      </Match>
+    </Switch>
   );
 };
 
