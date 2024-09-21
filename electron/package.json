@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "start:dev": "electron src/main.js --mode=dev",
+    "start:dev": "wait-on tcp:6080 && electron src/main.js --mode=dev",
     "dev": "electron src/main.js --mode=dev",
     "start:prod": "electron src/main.js",
     "dist": "electron-builder"
@@ -15,7 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^32.1.0",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^24.13.3",
+    "wait-on": "^8.0.1"
   },
   "build": {
     "appId": "com.yourcompany.electronapp",
