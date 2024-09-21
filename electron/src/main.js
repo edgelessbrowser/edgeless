@@ -40,7 +40,7 @@ function getMaximizedMonitorInfo(mainWindow) {
 let mainBaseWindow;
 let overlayWindow;
 
-const createPanel = ({ url, x, y, width, height, name }) => {
+const createPanel = ({ id, url, x, y, width, height }) => {
   const panel = new WebContentsView({
     webPreferences: {
       nodeIntegration: true,
@@ -68,7 +68,17 @@ const createPanel = ({ url, x, y, width, height, name }) => {
   });
 
   panel.webContents.on("focus", () => {
-    overlayWindow.webContents.send("panel:focused", { name });
+    overlayWindow.webContents.send("panel:focused", { name: id });
+  });
+
+  panel.webContents.on("page-title-updated", () => {
+    const title = panel.webContents.getTitle();
+    overlayWindow.webContents.send("PANEL:UPDATE", { id, title });
+  });
+
+  panel.webContents.on("update-target-url", () => {
+    const url = panel.webContents.getURL();
+    overlayWindow.webContents.send("PANEL:UPDATE", { id, url });
   });
 
   return panel;
@@ -85,7 +95,7 @@ app.whenReady().then(() => {
     titleBarOverlay: {
       color: "#475569",
       symbolColor: "#fff",
-      height: 40,
+      height: 48,
     },
     useContentSize: true,
   });
@@ -157,6 +167,16 @@ app.whenReady().then(() => {
     });
   });
 
+  ipcMain.on("PANEL:LOAD_URL", (event, data) => {
+    const { id, url } = data;
+
+    panels.forEach((panel) => {
+      if (panel.id === id) {
+        panel.wcv.webContents.loadURL(url);
+      }
+    });
+  });
+
   let panels = [];
   ipcMain.on("TAB:CREATE", (event, panel) => {
     const { id } = panel;
@@ -164,12 +184,12 @@ app.whenReady().then(() => {
     panels.push({
       id,
       wcv: createPanel({
+        id,
         url: "http://localhost:6080#page=default-page",
         x: 350,
         y: 50,
         width: 600,
         height: 600,
-        name: id,
       }),
     });
   });
