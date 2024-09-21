@@ -3,6 +3,7 @@ import { JSX } from "solid-js/jsx-runtime";
 import BrowserEvents from "../../../utils/browserEvents";
 import EdgelessWindowState from "../store/EdgelessWindowState";
 import ViewPanelState from "../../webview-panels/store/ViewPanelState";
+import { addNewTab } from "../../webview-panels/utils/webViewManagement";
 
 interface EdgelessWindowProps {
   children: JSX.Element;
@@ -21,6 +22,13 @@ function EdgelessWindow({ children }: EdgelessWindowProps) {
     BrowserEvents.on("panel:focused", (data) => {
       ViewPanelState.setFocusedTab(data.name);
     });
+
+    BrowserEvents.on("PANEL:UPDATE", (data) => {
+      const { id, ...rest } = data;
+      ViewPanelState.updatePanelWithObject(id, rest);
+    });
+
+    addNewTab();
   });
 
   return (
