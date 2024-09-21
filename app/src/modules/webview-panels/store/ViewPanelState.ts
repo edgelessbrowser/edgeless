@@ -49,9 +49,7 @@ function ViewPanelState() {
   const [tabWidth, setTabWidth] = createSignal(100);
   const [focuedTab, setFocusedTab] = createSignal("");
 
-  const [panels, setPanels] = createStore<PanelInterface[]>([
-    createPanel({ index: 0, isFocused: true }),
-  ]);
+  const [panels, setPanels] = createStore<PanelInterface[]>([]);
 
   const addPanel = (panel?: PanelInterface) => {
     const newPanel = createPanel(panel || {});
@@ -67,6 +65,17 @@ function ViewPanelState() {
     setPanels((panel) => panel.id === id, columnName, columnValue);
   };
 
+  const updatePanelWithObject = (id: string, data: any) => {
+    setPanels((panel) => panel.id === id, data);
+  };
+
+  const updateActivePanel = (columnName: any, columnValue: any) => {
+    const activePanel = getVisiblePanel();
+    if (activePanel) {
+      updatePanel(activePanel.id || "", columnName, columnValue);
+    }
+  };
+
   const setAsVisible = (id: string) => {
     const visiblePanel = getVisiblePanel();
     if (visiblePanel) {
@@ -74,6 +83,11 @@ function ViewPanelState() {
     }
 
     updatePanel(id, "isVisible", true);
+  };
+
+  const getActiveUrl = () => {
+    const activePanel = getVisiblePanel();
+    return activePanel?.url;
   };
 
   const highlightFocusedPanel = () => {
@@ -86,16 +100,19 @@ function ViewPanelState() {
   };
 
   return {
-    tabWidth,
-    setTabWidth,
-    focuedTab,
-    setFocusedTab,
     panels,
     addPanel,
+    tabWidth,
+    focuedTab,
+    setTabWidth,
     removePanel,
     updatePanel,
     setAsVisible,
+    getActiveUrl,
+    setFocusedTab,
     getVisiblePanel,
+    updateActivePanel,
+    updatePanelWithObject,
     highlightFocusedPanel,
   };
 }
