@@ -6,7 +6,7 @@ export default function DefaultPage() {
       text-sm text-white bg-slate-700
     `}
     >
-      <h1 class="font-bold text-2xl text-slate-800/60 select-none">
+      <h1 class="font-bold text-3xl text-slate-800/60 select-none">
         Edgeless Browser
       </h1>
     </div>
