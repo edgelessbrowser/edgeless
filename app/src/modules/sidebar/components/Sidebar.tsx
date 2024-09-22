@@ -1,35 +1,25 @@
-import { createSignal, createEffect, For, Show } from "solid-js";
+import { For } from "solid-js";
 import SidebarState from "../store/SidebarState";
-import ViewPanelState, {
-  PanelInterface,
-} from "../../webview-panels/store/ViewPanelState";
-import Box from "../../ui/components/Box";
+import ViewPanelState from "../../webview-panels/store/ViewPanelState";
 import { IconX } from "@tabler/icons-solidjs";
 import { removeTab } from "../../webview-panels/utils/webViewManagement";
 
 function Sidebar() {
-  const [panelData, setPanelData] = createSignal<PanelInterface[]>([]);
-  // const visiblePanel = ViewPanelState.getVisiblePanel();
-
-  createEffect(() => {
-    setPanelData([ViewPanelState.getVisiblePanel() ?? {}]);
-  });
-
   return (
     <div
-      class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu mr-0"
+      class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu"
       style={{
-        width: SidebarState.viewSidebar() ? "260px" : "0px",
+        width: SidebarState.viewSidebar() ? "220px" : "0px",
         opacity: SidebarState.viewSidebar() ? 1 : 0,
         "user-select": SidebarState.viewSidebar() ? "auto" : "none",
       }}
     >
-      <div class="flex flex-col gap-1 mx-2 w-[250px] mt-1">
+      <div class="flex flex-col gap-1 w-[220px] mt-1 h-full">
         <For each={ViewPanelState.panels}>
           {(panel) => (
             <div
               class={`
-                group select-none flex items-center justify-between px-4 h-8 mr-1.5 rounded 
+                group select-none flex items-center justify-between px-2 h-8 ml-1 mr-1.5 rounded 
                 ${
                   panel.isVisible ? "bg-slate-700" : "bg-slate-700/30"
                 } hover:bg-slate-700/80 active:bg-slate-700 cursor-pointer 
@@ -55,12 +45,6 @@ function Sidebar() {
           )}
         </For>
       </div>
-
-      {/* <div class="w-60 ml-2 border fixed bottom-0 mb-2 h-80 overflow-scroll">
-        <pre class="leading-4 text-xs p-1">
-          <code class="">{JSON.stringify(panelData(), null, 2)}</code>
-        </pre>
-      </div> */}
     </div>
   );
 }
