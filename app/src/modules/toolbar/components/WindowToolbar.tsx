@@ -48,7 +48,7 @@ function WindowToolbar() {
         onSubmit={handleSubmit}
       >
         <input
-          class="h-9 w-full text-slate-100 pl-3 pr-10 text-sm rounded bg-slate-700"
+          class="h-9 w-full text-slate-100 pl-3 pr-10 text-sm rounded bg-slate-700 outline-none"
           type="text"
           value={ViewPanelState.getActiveUrl()}
         />
