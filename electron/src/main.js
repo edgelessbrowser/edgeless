@@ -43,17 +43,19 @@ let overlayWindow;
 const createPanel = ({ id, url, x, y, width, height }) => {
   const panel = new WebContentsView({
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
     },
   });
 
   panel.setBackgroundColor("#475569");
+  panel.webContents.userAgent =
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
 
   contextMenu({
-    window: panel.webContents, // Specify the webContents where the context menu should be applied
-    showSaveImageAs: true, // Example: Enable "Save Image As..." option
-    showInspectElement: true, // Example: Enable "Inspect Element" option for debugging
-    showSearchWithGoogle: true, // Example: Enable "Search with Google" option
+    window: panel.webContents,
+    showSaveImageAs: true,
+    showInspectElement: true,
+    showSearchWithGoogle: true,
   });
 
   mainBaseWindow.contentView.addChildView(panel);

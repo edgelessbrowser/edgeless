@@ -70,14 +70,7 @@ function ViewPanel(props: { panel?: PanelInterface }) {
       <div
         class="bg-slate-700 p-4 min-w-52 w-full h-full"
         ref={(el) => (panelRef = el)}
-      >
-        <p class="text-xs mb-2">{widthPercent()}</p>
-        <pre class="text-xs">{JSON.stringify(tabBounds(), null, 2)}</pre>
-        <p class="mt-4">Panel State</p>
-        <pre class="text-xs">
-          {JSON.stringify(ViewPanelState.panels, null, 2)}
-        </pre>
-      </div>
+      />
       {isFocusedPanel() && (
         <div class="absolute top-0 left-0 right-0 -mt-1.5 px-0.5 select-none">
           <div class="bg-slate-400/80 hover:bg-slate-400 h-1 rounded"></div>
