@@ -6,8 +6,7 @@ interface BoxProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 const Box: Component<BoxProps> = (props: BoxProps) => {
-  const { children, ...rest } = props;
-  return <div {...rest}>{props.children}</div>;
+  return <div {...props}>{props.children}</div>;
 };
 
 export default Box;
