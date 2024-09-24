@@ -11,6 +11,7 @@ import SidebarState from "../../sidebar/store/SidebarState";
 import ViewPanelState from "../../webview-panels/store/ViewPanelState";
 import { addNewTab } from "../../webview-panels/utils/webViewManagement";
 import BrowserEvents from "../../../utils/browserEvents";
+import ToolbarButton from "./ToolbarButton";
 
 function WindowToolbar() {
   const handleSubmit = (e: Event) => {
@@ -27,34 +28,32 @@ function WindowToolbar() {
   };
 
   return (
-    <Box class="text-center flex items-center justify-center gap-3 h-11 win-drag py-1">
-      <button
-        title="Toggle Sidebar"
-        class="p-1 win-no-drag hover:bg-slate-700 rounded mt-1 h-9"
-        onClick={SidebarState.toggleSidebar}
-      >
-        <IconLayoutSidebar stroke="1.5" />
-      </button>
+    <Box class="text-center flex items-center justify-center gap-3 h-10 win-drag">
+      <ToolbarButton onClick={SidebarState.toggleSidebar}>
+        <IconLayoutSidebar class="w-5 h-5" stroke="2" />
+      </ToolbarButton>
 
-      <button
-        title="Toggle Sidebar"
-        class="p-1 win-no-drag hover:bg-slate-700 rounded mt-1 h-9 px-1.5"
-        onClick={SidebarState.toggleSidebar}
-      >
-        <IconReload stroke="1.5" />
-      </button>
+      <ToolbarButton>
+        <IconReload class="w-5 h-5" stroke="2" />
+      </ToolbarButton>
+
       <form
-        class="w-3/6 h-full py-0.5 win-no-drag flex relative"
+        class="w-3/6 h-full py-0.5 win-no-drag flex relative mt-1"
         onSubmit={handleSubmit}
       >
         <input
-          class="h-9 w-full text-slate-100 pl-3 pr-10 text-sm rounded bg-slate-700 outline-none"
+          class={`
+            group
+            text-xs
+            h-9 w-full text-slate-100 pl-3 pr-10 rounded outline-none 
+            bg-transparent hover:bg-slate-700/60 active:bg-slate-700 focus:bg-slate-700 transition-[background-color] duration-200
+          `}
           type="text"
           value={ViewPanelState.getActiveUrl()}
         />
 
         <button
-          class="p-1 win-no-drag hover:bg-slate-700 rounded absolute right-0 mt-0.5 mr-1 text-slate-400 hover:text-slate-300"
+          class="p-1 win-no-drag rounded absolute right-0 mt-0.5 mr-1 text-slate-400 hover:text-slate-300 transition-[color] duration-200 hidden group-focus:block"
           title="Search"
           type="submit"
         >
@@ -62,21 +61,13 @@ function WindowToolbar() {
         </button>
       </form>
       <Box class="win-no-drag">
-        <button
-          class="p-1 win-no-drag hover:bg-slate-700 rounded mt-1 h-9 px-1.5"
-          title="Add new tab"
-          onClick={addNewTab}
-        >
-          <IconPlus stroke="1.5" />
-        </button>
+        <ToolbarButton onClick={addNewTab}>
+          <IconPlus class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
 
-        <button
-          class="p-1 win-no-drag hover:bg-slate-700 rounded mt-1 h-9 px-2.5"
-          title="Add new tab"
-          onClick={addNewTab}
-        >
-          <IconCaretDownFilled stroke="1.5" class="w-4" />
-        </button>
+        <ToolbarButton>
+          <IconCaretDownFilled class="w-4 h-4" stroke="2" />
+        </ToolbarButton>
       </Box>
     </Box>
   );
