@@ -100,6 +100,10 @@ app.whenReady().then(() => {
       height: 48,
     },
     useContentSize: true,
+    trafficLightPosition: {
+      x: 15,
+      y: 12,
+    },
   });
 
   if (isWindows) {
