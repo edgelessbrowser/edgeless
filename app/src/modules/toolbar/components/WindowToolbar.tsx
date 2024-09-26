@@ -4,6 +4,8 @@ import {
   IconReload,
   IconLayoutSidebar,
   IconCaretDownFilled,
+  IconChevronLeft,
+  IconChevronRight,
 } from "@tabler/icons-solidjs";
 
 import Box from "../../ui/components/Box";
@@ -29,6 +31,15 @@ function WindowToolbar() {
 
   return (
     <Box class="text-center flex items-center justify-center gap-3 h-10 win-drag">
+      <Box>
+        <ToolbarButton class="pr-2">
+          <IconChevronLeft class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
+
+        <ToolbarButton>
+          <IconChevronRight class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
+      </Box>
       <ToolbarButton onClick={SidebarState.toggleSidebar}>
         <IconLayoutSidebar class="w-5 h-5" stroke="2" />
       </ToolbarButton>
