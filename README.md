@@ -1,34 +1,29 @@
-# solidjs-electron-template
+# Edgeless Browser
 
-this is a template for creating an electron app and solidjs app.
+![Edgeless Logo](./assets/Edgeless%20Logo.png)
 
-the solidjs code is in the app/ directory so make you're there for editing your solidjs code and installing dependecies for solidjs. the electron code is in the electron/ directory.
+Edgeless Browser is a browser that is built on top of the electron framework and uses the solidjs library for the front end. The browser is a work in progress and is not yet ready for use. The browser is being built to be a more privacy focused browser that is secure and minimalistic. The browser is being built by Hasan and is open source so feel free to contribute to the project.
+
+![App Screenshot](./screenshots/Screenshot_2024-09-30.png)
 
 ### getting started
 
 to get started install the dependencies in both the app and electron directories
 
 ```bash
-# clone template
-git clone https://github.com/maxhu08/solidjs-electron.git
+git clone https://github.com/edgelessbrowser/edgeless
 
 # cd
-cd solidjs-electron
+cd edgeless
 
 # installing app (solidjs) dependecies
 cd app
-npm install
+yarn install
 
-# installing electron dependecies
-cd ../electron
-npm install
-
-# delete git info so you can add your own repo
-rm -rf .git
+# Run the app in development mode
+yarn dev
 ```
 
-then start the development server (make sure you're in the top dir)
+> More information is coming soon.
 
-```
-npm run dev
-```
+Tweet at [@rakibtg](https://twitter.com/rakibtg)
