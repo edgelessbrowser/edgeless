@@ -1,7 +1,15 @@
-import { app, BaseWindow, WebContentsView, ipcMain, screen } from "electron";
+import {
+  app,
+  BaseWindow,
+  WebContentsView,
+  ipcMain,
+  screen,
+  globalShortcut,
+} from "electron";
 import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import contextMenu from "electron-context-menu";
+import resetCss from "./utils/resetCss.js";
 
 const projectDirname = dirname(fileURLToPath(import.meta.url));
 
@@ -83,6 +91,11 @@ const createPanel = ({ id, url, x, y, width, height }) => {
     overlayWindow.webContents.send("PANEL:UPDATE", { id, url });
   });
 
+  panel.webContents.on("dom-ready", () => {
+    panel.setBackgroundColor("#ffffff");
+    panel.webContents.insertCSS(resetCss());
+  });
+
   return panel;
 };
 
@@ -93,12 +106,12 @@ app.whenReady().then(() => {
     backgroundColor: "#475569",
     frame: false,
     titleBarStyle: "hidden",
-    titleBarOverlay: true,
-    titleBarOverlay: {
-      color: "#475569",
-      symbolColor: "#fff",
-      height: 48,
-    },
+    titleBarOverlay: false,
+    // titleBarOverlay: {
+    //   color: "#475569",
+    //   symbolColor: "#fff",
+    //   height: 44,
+    // },
     useContentSize: true,
     trafficLightPosition: {
       x: 15,
@@ -135,6 +148,26 @@ app.whenReady().then(() => {
   mainBaseWindow.on("resize", () => {
     overlayWindow.setBounds({ ...mainBaseWindow.getBounds(), x: 0, y: 0 });
   });
+
+  const toolbarreg = globalShortcut.register("Ctrl+Shift+T", () => {
+    if (mainBaseWindow.isFocused()) {
+      overlayWindow.webContents.send("baseWindow:toogleToolbar");
+    }
+  });
+
+  if (!toolbarreg) {
+    console.log("Registration failed");
+  }
+
+  const sidereg = globalShortcut.register("Ctrl+Shift+D", () => {
+    if (mainBaseWindow.isFocused()) {
+      overlayWindow.webContents.send("baseWindow:toogleSidebar");
+    }
+  });
+
+  if (!sidereg) {
+    console.log("Registration failed");
+  }
 
   if (isWindows) {
     mainBaseWindow.on("resize", () => {
@@ -212,7 +245,8 @@ app.whenReady().then(() => {
     panels = panels.filter((panel) => panel.id !== panelId);
   });
 
-  // overlayWindow.webContents.openDevTools();
+  overlayWindow.webContents.openDevTools();
+  mainBaseWindow.webContents.openDevTools();
 });
 
 app.on("window-all-closed", () => {

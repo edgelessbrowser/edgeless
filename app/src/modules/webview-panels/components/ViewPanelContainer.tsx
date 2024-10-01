@@ -33,7 +33,7 @@ function ViewPanelContainer() {
   };*/
 
   return (
-    <div class="flex w-full h-full pt-0.5">
+    <div class="flex w-full h-full">
       <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
       {/* <For each={ViewPanelState.panels}>
         {(panel) => (

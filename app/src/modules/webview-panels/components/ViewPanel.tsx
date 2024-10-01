@@ -1,24 +1,23 @@
+import useEvents from "../../../hooks/useEvents";
 import BrowserEvents from "../../../utils/browserEvents";
+import SidebarState from "../../sidebar/store/SidebarState";
+import ToolbarState from "../../toolbar/store/ToolbarState";
 import ViewPanelState, { PanelInterface } from "../store/ViewPanelState";
 import { createSignal, onMount, onCleanup, createEffect } from "solid-js";
 
 function ViewPanel(props: { panel?: PanelInterface }) {
   let panelRef: HTMLDivElement | undefined;
 
-  const [tabBounds, setTabBounds] = createSignal<{
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
-
   const [widthPercent, setWidthPercent] = createSignal("100%");
   const [isFocusedPanel, setIsFocusedPanel] = createSignal(false);
+
+  useEvents("baseWindow:toogleToolbar", () => {
+    ToolbarState.toggleToolbar();
+  });
+
+  useEvents("baseWindow:toogleSidebar", () => {
+    SidebarState.toggleSidebar();
+  });
 
   const updateBounds = () => {
     if (panelRef) {
@@ -29,7 +28,7 @@ function ViewPanel(props: { panel?: PanelInterface }) {
         width: bounds.width,
         height: bounds.height,
       };
-      setTabBounds(formattedBounds);
+
       BrowserEvents.send("PANEL:BOUND_UPDATE", {
         ...formattedBounds,
         id: props.panel?.id,
@@ -62,7 +61,7 @@ function ViewPanel(props: { panel?: PanelInterface }) {
 
   return (
     <div
-      class="h-full relative mt-0.5"
+      class="h-full relative"
       style={{
         width: widthPercent(),
       }}
