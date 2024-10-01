@@ -1,6 +1,6 @@
 # Edgeless Browser
 
-![Edgeless Logo](./assets/Edgeless%20Logo.png)
+<img src="./assets/Edgeless%20Logo.png" alt="Edgeless Browser" align="center" height="300" width="300" />
 
 Edgeless Browser is a browser that is built on top of the electron framework and uses the solidjs library for the front end. The browser is a work in progress and is not yet ready for use. The browser is being built to be a more privacy focused browser that is secure and minimalistic. The browser is being built by Hasan and is open source so feel free to contribute to the project.
 
