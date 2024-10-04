@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@tabler/icons-solidjs": "^3.16.0",
-    "solid-js": "^1.8.22"
+    "solid-js": "^1.8.22",
+    "sharedenums": "^1.0.0"
   }
 }

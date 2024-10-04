@@ -1,5 +1,6 @@
 import ViewPanelState from "../store/ViewPanelState";
 import BrowserEvents from "../../../utils/browserEvents";
+// import rcEven from "sharedenums";
 
 export function addNewTab() {
   const panel = ViewPanelState.addPanel();
