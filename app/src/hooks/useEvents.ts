@@ -3,10 +3,26 @@ import BrowserEvents from "../utils/browserEvents";
 
 type BrowserMessageCallback = (...args: any[]) => void;
 
-function useEvents(channel: string, callback: BrowserMessageCallback) {
+interface UseEventsInterface {
+  channel: string;
+  broadcast?: boolean;
+  payload?: any;
+  callback: BrowserMessageCallback;
+}
+
+function useEvents({
+  channel,
+  callback,
+  broadcast,
+  payload,
+}: UseEventsInterface) {
   const listener: BrowserMessageCallback = (...args) => {
     callback(...args);
   };
+
+  if (broadcast) {
+    BrowserEvents.send(channel, payload);
+  }
 
   BrowserEvents.on(channel, listener);
 
