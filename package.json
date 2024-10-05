@@ -15,7 +15,7 @@
   "devDependencies": {},
   "private": true,
   "workspaces": [
-    "shared",
+    "shared/*",
     "app",
     "electron"
   ]
