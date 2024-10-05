@@ -11,12 +11,18 @@ function ViewPanel(props: { panel?: PanelInterface }) {
   const [widthPercent, setWidthPercent] = createSignal("100%");
   const [isFocusedPanel, setIsFocusedPanel] = createSignal(false);
 
-  useEvents("baseWindow:toogleToolbar", () => {
-    ToolbarState.toggleToolbar();
+  useEvents({
+    channel: "baseWindow:toogleToolbar",
+    callback: () => {
+      ToolbarState.toggleToolbar();
+    },
   });
 
-  useEvents("baseWindow:toogleSidebar", () => {
-    SidebarState.toggleSidebar();
+  useEvents({
+    channel: "baseWindow:toogleSidebar",
+    callback: () => {
+      SidebarState.toggleSidebar();
+    },
   });
 
   const updateBounds = () => {
