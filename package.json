@@ -12,5 +12,11 @@
   "dependencies": {
     "concurrently": "^8.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "private": true,
+  "workspaces": [
+    "shared/*",
+    "app",
+    "electron"
+  ]
 }
