@@ -20,6 +20,7 @@
   "dependencies": {
     "@tabler/icons-solidjs": "^3.16.0",
     "solid-js": "^1.8.22",
-    "shared-utils": "^1.0.0"
+    "shared-utils": "^1.0.0",
+    "shared-types": "^1.0.0"
   }
 }

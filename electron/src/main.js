@@ -10,6 +10,11 @@ import { fileURLToPath } from "url";
 import path, { dirname } from "path";
 import contextMenu from "electron-context-menu";
 import resetCss from "./utils/resetCss.js";
+import {
+  getArchitecture,
+  getOsName,
+  getSystemTheme,
+} from "./utils/getSystemInfo.js";
 
 const projectDirname = dirname(fileURLToPath(import.meta.url));
 
@@ -101,12 +106,13 @@ const createPanel = ({ id, url, x, y, width, height }) => {
 
 app.whenReady().then(() => {
   mainBaseWindow = new BaseWindow({
-    width: 1200,
-    height: 700,
+    width: 1400,
+    height: 900,
     backgroundColor: "#475569",
     frame: false,
     titleBarStyle: "hidden",
     titleBarOverlay: false,
+    center: false,
     // titleBarOverlay: {
     //   color: "#475569",
     //   symbolColor: "#fff",
@@ -213,6 +219,22 @@ app.whenReady().then(() => {
       if (panel.id === id) {
         panel.wcv.webContents.loadURL(url);
       }
+    });
+  });
+
+  ipcMain.on("BROWSER:GET_SYSTEM_INFO", (event) => {
+    const osName = getOsName();
+    const systemTheme = getSystemTheme();
+    const architecture = getArchitecture();
+
+    console.log("osName:", osName);
+    console.log("systemTheme:", systemTheme);
+    console.log("architecture:", architecture);
+
+    event.reply("BROWSER:GET_SYSTEM_INFO", {
+      osName,
+      systemTheme,
+      architecture,
     });
   });
 

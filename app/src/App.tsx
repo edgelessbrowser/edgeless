@@ -1,6 +1,6 @@
 import { type Component, Switch, Match } from "solid-js";
 import { decodeHashParams } from "./modules/pages/utils/parseHashParams";
-import EdgelessBrowserRootView from "./modules/pages/components/EdgelessBrowserRootView";
+import RootView from "./modules/root/components/RootView";
 import DefaultPage from "./modules/pages/components/DefaultPage";
 
 const App: Component = () => {
@@ -9,7 +9,7 @@ const App: Component = () => {
   return (
     <Switch>
       <Match when={page === "browser"}>
-        <EdgelessBrowserRootView />
+        <RootView />
       </Match>
       <Match when={page === "default-page"}>
         <DefaultPage />
