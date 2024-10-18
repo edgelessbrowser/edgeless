@@ -73,7 +73,7 @@ function ViewPanel(props: { panel?: PanelInterface }) {
       }}
     >
       <div
-        class="bg-slate-700 p-4 min-w-52 w-full h-full"
+        class="bg-slate-700 p-4 min-w-52 w-full h-full rounded-md"
         ref={(el) => (panelRef = el)}
       />
       {isFocusedPanel() && (

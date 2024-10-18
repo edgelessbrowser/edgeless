@@ -46,7 +46,7 @@ function WindowToolbar() {
     <Box
       class="text-center flex items-center justify-center gap-3 h-10 win-drag transition-[height,opacity] duration-200 transform-gpu relative"
       style={{
-        height: ToolbarState.viewToolbar() ? "40px" : "0.5px",
+        height: ToolbarState.viewToolbar() ? "40px" : "0px",
         opacity: ToolbarState.viewToolbar() ? 1 : 0,
         "user-select": ToolbarState.viewToolbar() ? "auto" : "none",
       }}
