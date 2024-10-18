@@ -115,6 +115,7 @@ app.whenReady().then(() => {
     titleBarStyle: "hidden",
     titleBarOverlay: false,
     center: false,
+    roundedCorners: true,
     // titleBarOverlay: {
     //   color: "#475569",
     //   symbolColor: "#fff",
