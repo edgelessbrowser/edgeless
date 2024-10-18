@@ -15,12 +15,12 @@ function Sidebar() {
         "user-select": SidebarState.viewSidebar() ? "auto" : "none",
       }}
     >
-      <Box class="flex flex-col gap-1 w-[220px] mt-1 h-full">
+      <Box class="flex flex-col gap-1 w-[220px] mt-1.5 h-full">
         <For each={ViewPanelState.panels}>
           {(panel) => (
             <Box
               class={`
-                group select-none flex items-center justify-between px-2 h-8 ml-1 mr-1.5 rounded 
+                group select-none flex items-center justify-between px-2 h-8 ml-1 mr-0 rounded-md 
                 ${
                   panel.isVisible ? "bg-slate-700" : "bg-slate-700/30"
                 } hover:bg-slate-700/80 active:bg-slate-700 cursor-pointer 
