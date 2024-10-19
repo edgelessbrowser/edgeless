@@ -77,7 +77,7 @@ function WindowToolbar() {
           class={`
             group
             text-xs 
-            h-8 w-full text-slate-100 pl-3 pr-10 rounded outline-none 
+            w-full text-slate-100 pl-3 pr-10 rounded outline-none 
             bg-transparent hover:bg-slate-700/60 active:bg-slate-700 focus:bg-slate-700 transition-[background-color] duration-200
           `}
           type="text"
