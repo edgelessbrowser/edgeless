@@ -24,6 +24,20 @@ yarn install
 yarn dev
 ```
 
+### Workspace Package Installation
+
+To add a package to a specific workspace, you can use the following command:
+
+```bash
+yarn workspace <workspace_name> add <package_name>
+```
+
+For example, to add the `react-dom` package to the `app` workspace, run:
+
+```bash
+yarn workspace app add react-dom
+```
+
 > More information is coming soon.
 
 Tweet at [@rakibtg](https://twitter.com/rakibtg)
