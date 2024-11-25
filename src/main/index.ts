@@ -1,6 +1,5 @@
 import os from 'os'
 import { join } from 'path'
-import { is } from '@electron-toolkit/utils'
 import {
   app,
   BaseWindow,
@@ -20,6 +19,7 @@ import {
 
 import { baseWindow } from './windows/baseWindow'
 import { containerWindow } from './windows/containerWindow'
+import { createPanel } from './web_panels/createPanel'
 
 const getOsName = () => {
   switch (os.platform()) {
@@ -62,36 +62,6 @@ const getArchitecture = () => {
 //   // Return the hash string, including the leading '#'
 //   return `#${hashParams.toString()}`
 // }
-
-function resetCss() {
-  return `
-    ::-webkit-scrollbar {
-        width: 14px;
-        height: 14px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background-color: #d6dee1;
-        border-radius: 8px;
-        border: 2px solid transparent;
-        border-left-width: 3px;
-        border-right-width: 3px;
-        background-clip: content-box;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: #a8bbbf;
-      }
-
-      ::-webkit-scrollbar-corner { 
-        background-color: transparent; 
-      }
-  `
-}
 
 // const isLinux = process.platform === 'linux'
 // const isMacOs = process.platform === 'darwin'
@@ -137,68 +107,68 @@ function createWindow(): void {
   container = containerWindow({ base, preload: join(__dirname, '../preload/index.js') })
 }
 
-const createPanel = ({ id, url, x, y, width, height }) => {
-  const panel = new WebContentsView({
-    webPreferences: {
-      nodeIntegration: false
-    }
-  })
+// const createPanel = ({ id, url, x, y, width, height }) => {
+//   const panel = new WebContentsView({
+//     webPreferences: {
+//       nodeIntegration: false
+//     }
+//   })
 
-  panel.setBorderRadius(6)
+//   panel.setBorderRadius(6)
 
-  panel.setBackgroundColor('#475569')
-  panel.webContents.userAgent =
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+//   panel.setBackgroundColor('#475569')
+//   panel.webContents.userAgent =
+//     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 
-  // contextMenu({
-  //   window: panel.webContents,
-  //   showSaveImageAs: true,
-  //   showInspectElement: true,
-  //   showSearchWithGoogle: true
-  // })
+//   // contextMenu({
+//   //   window: panel.webContents,
+//   //   showSaveImageAs: true,
+//   //   showInspectElement: true,
+//   //   showSearchWithGoogle: true
+//   // })
 
-  base.contentView.addChildView(panel)
+//   base.contentView.addChildView(panel)
 
-  if (url) {
-    panel.webContents.loadURL(url)
-  } else if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    panel.webContents.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#page=default-page')
-  } else {
-    panel.webContents.loadFile(join(__dirname, '../renderer/index.html#page=default-page'))
-  }
+//   if (url) {
+//     panel.webContents.loadURL(url)
+//   } else if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+//     panel.webContents.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#page=default-page')
+//   } else {
+//     panel.webContents.loadFile(join(__dirname, '../renderer/index.html#page=default-page'))
+//   }
 
-  panel.setBounds({
-    width,
-    height,
-    x,
-    y
-  })
+//   panel.setBounds({
+//     width,
+//     height,
+//     x,
+//     y
+//   })
 
-  panel.webContents.on('focus', () => {
-    container.webContents.send('panel:focused', { name: id })
-  })
+//   panel.webContents.on('focus', () => {
+//     container.webContents.send('panel:focused', { name: id })
+//   })
 
-  panel.webContents.on('page-title-updated', () => {
-    const title = panel.webContents.getTitle()
-    container.webContents.send('PANEL:UPDATE', { id, title })
-  })
+//   panel.webContents.on('page-title-updated', () => {
+//     const title = panel.webContents.getTitle()
+//     container.webContents.send('PANEL:UPDATE', { id, title })
+//   })
 
-  panel.webContents.on('update-target-url', () => {
-    const url = panel.webContents.getURL()
-    container.webContents.send('PANEL:UPDATE', { id, url })
-  })
+//   panel.webContents.on('update-target-url', () => {
+//     const url = panel.webContents.getURL()
+//     container.webContents.send('PANEL:UPDATE', { id, url })
+//   })
 
-  panel.webContents.on('dom-ready', () => {
-    panel.setBackgroundColor('#ffffff')
-    panel.webContents.insertCSS(resetCss())
-  })
+//   panel.webContents.on('dom-ready', () => {
+//     panel.setBackgroundColor('#ffffff')
+//     panel.webContents.insertCSS(resetCss())
+//   })
 
-  return panel
-}
+//   return panel
+// }
 
 app.whenReady().then(() => {
   createWindow()
-  // container.webContents.openDevTools()
+  container.webContents.openDevTools()
 
   if (isWindows) {
     getMaximizedMonitorInfo(base)
@@ -313,21 +283,21 @@ app.whenReady().then(() => {
   })
 
   let panels = []
-  ipcMain.on('TAB:CREATE', (_, panel: any) => {
-    const { id } = panel
-    panels = panels.filter((p: any) => p.id !== id)
-    // @ts-ignore
-    panels.push({
-      id,
-      wcv: createPanel({
-        id,
-        url: process.env['ELECTRON_RENDERER_URL'] + '#page=default-page',
-        x: 350,
-        y: 50,
-        width: 600,
-        height: 600
-      })
+  ipcMain.on('TAB:CREATE', (event) => {
+    const newPanel = createPanel({
+      base,
+      container,
+      width: 300,
+      height: 200
     })
+
+    if (newPanel.id) {
+      delete newPanel.base
+      delete newPanel.container
+      delete (newPanel as any).panel
+
+      event.reply('TAB:CREATE', newPanel)
+    }
   })
 
   ipcMain.on('TAB:REMOVE', (_, panelId) => {
