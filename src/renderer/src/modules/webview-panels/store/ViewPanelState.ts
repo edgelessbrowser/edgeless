@@ -1,5 +1,6 @@
 import { createStore } from 'solid-js/store'
 import { createSignal, createRoot } from 'solid-js'
+import BrowserEvents from '@renderer/utils/browserEvents'
 
 export interface PanelInterface {
   id?: string
@@ -56,9 +57,13 @@ function ViewPanelState() {
   const [panels, setPanels] = createStore<PanelInterface[]>([])
 
   const addPanel = (panel?: PanelInterface) => {
-    const newPanel = createPanel(panel || {})
-    setPanels(panels.length, newPanel)
-    return newPanel
+    // const newPanel = createPanel(panel || {})
+    BrowserEvents.once('TAB:CREATE', (data) => {
+      console.log('TAB:CREATE => ', data)
+    })
+    // setPanels(panels.length, newPanel)
+    // return newPanel
+    return {}
   }
 
   const removePanel = (id: string) => {
