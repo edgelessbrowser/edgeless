@@ -3,19 +3,18 @@ import {
   IconPlus,
   IconReload,
   IconLayoutSidebar,
-  IconCaretDownFilled,
+  // IconCaretDownFilled,
   IconChevronLeft,
   IconChevronRight
 } from '@tabler/icons-solidjs'
-
-import Box from '../../ui/components/Box'
-import SidebarState from '../../sidebar/store/SidebarState'
-import ViewPanelState from '../../webview-panels/store/ViewPanelState'
-import { addNewTab } from '../../webview-panels/utils/webViewManagement'
-import BrowserEvents from '../../../utils/browserEvents'
-import ToolbarButton from './ToolbarButton'
-import ToolbarState from '../store/ToolbarState'
-import WindowControlButtons from './WindowControlButtons'
+import Box from '@renderer/modules/ui/components/Box'
+import BrowserEvents from '@renderer/utils/browserEvents'
+import SidebarState from '@renderer/modules/sidebar/store/SidebarState'
+import ToolbarState from '@renderer/modules/toolbar/store/ToolbarState'
+import ToolbarButton from '@renderer/modules/toolbar/components/ToolbarButton'
+import ViewPanelState from '@renderer/modules/webview-panels/store/ViewPanelState'
+import { addNewTab } from '@renderer/modules/webview-panels/utils/webViewManagement'
+import WindowControlButtons from '@renderer/modules/toolbar/components/WindowControlButtons'
 
 function WindowToolbar() {
   const handleSubmit = (e: Event) => {
@@ -49,20 +48,20 @@ function WindowToolbar() {
       }}
     >
       <Box>
-        <ToolbarButton class="pr-2">
+        <ToolbarButton class="pr-2" title="Go back">
           <IconChevronLeft class="w-5 h-5" stroke="2" />
         </ToolbarButton>
 
-        <ToolbarButton>
+        <ToolbarButton title="Go forward">
           <IconChevronRight class="w-5 h-5" stroke="2" />
         </ToolbarButton>
       </Box>
 
-      <ToolbarButton onClick={SidebarState.toggleSidebar}>
+      <ToolbarButton onClick={SidebarState.toggleSidebar} title="Toggle sidebar">
         <IconLayoutSidebar class="w-5 h-5" stroke="2" />
       </ToolbarButton>
 
-      <ToolbarButton onClick={handleReload}>
+      <ToolbarButton onClick={handleReload} title="Reload page">
         <IconReload class="w-5 h-5" stroke="2" />
       </ToolbarButton>
 
@@ -75,6 +74,7 @@ function WindowToolbar() {
             bg-transparent hover:bg-slate-700/60 active:bg-slate-700 focus:bg-slate-700 transition-[background-color] duration-200
           `}
           type="text"
+          title="Search or visit a website"
           value={ViewPanelState.getActiveUrl()}
         />
 
@@ -87,12 +87,8 @@ function WindowToolbar() {
         </button>
       </form>
       <Box class="win-no-drag">
-        <ToolbarButton onClick={addNewTab}>
+        <ToolbarButton onClick={addNewTab} title="New tab">
           <IconPlus class="w-5 h-5" stroke="2" />
-        </ToolbarButton>
-
-        <ToolbarButton>
-          <IconCaretDownFilled class="w-4 h-4" stroke="2" />
         </ToolbarButton>
       </Box>
 
