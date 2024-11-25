@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-// Edgeless Browser Pipeline (___ebp___)
-contextBridge.exposeInMainWorld('___ebp___', {
+// Edgeless Browser Pipeline (EDGELESS_GLOBAL_BRIDGE)
+contextBridge.exposeInMainWorld('EDGELESS_GLOBAL_BRIDGE', {
   send: (channel, data) => {
     ipcRenderer.send(channel, data)
   },
