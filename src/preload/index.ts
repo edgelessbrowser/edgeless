@@ -13,5 +13,8 @@ contextBridge.exposeInMainWorld('EDGELESS_GLOBAL_BRIDGE', {
   },
   removeListener: (channel, func) => {
     ipcRenderer.removeListener(channel, func)
+  },
+  invoke: (channel, data): Promise<any> => {
+    return ipcRenderer.invoke(channel, data)
   }
 })
