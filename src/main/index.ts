@@ -283,21 +283,45 @@ app.whenReady().then(() => {
   })
 
   let panels = []
-  ipcMain.on('TAB:CREATE', (event) => {
-    const newPanel = createPanel({
-      base,
-      container,
-      width: 300,
-      height: 200
+  ipcMain.handle('TAB:CREATE', async () => {
+    return new Promise(function (resolve, reject) {
+      console.log('create panel')
+      const newPanel = createPanel({
+        base,
+        container,
+        width: 300,
+        height: 200
+      })
+
+      if (newPanel.id) {
+        delete newPanel.base
+        delete newPanel.container
+        delete (newPanel as any).panel
+
+        resolve(newPanel)
+      } else {
+        reject(new Error('Error creating panel'))
+      }
     })
+    // console.log('create panel')
+    // const newPanel = createPanel({
+    //   base,
+    //   container,
+    //   width: 300,
+    //   height: 200
+    // })
 
-    if (newPanel.id) {
-      delete newPanel.base
-      delete newPanel.container
-      delete (newPanel as any).panel
+    // if (newPanel.id) {
+    //   delete newPanel.base
+    //   delete newPanel.container
+    //   delete (newPanel as any).panel
 
-      event.reply('TAB:CREATE', newPanel)
-    }
+    //   setInterval(() => {
+    //     event.reply('TAB:CREATE', { cool: 1 })
+    //   }, 1000)
+
+    //   event.reply('TAB:CREATE', newPanel)
+    // }
   })
 
   ipcMain.on('TAB:REMOVE', (_, panelId) => {
