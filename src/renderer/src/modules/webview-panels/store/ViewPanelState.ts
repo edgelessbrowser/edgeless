@@ -58,9 +58,9 @@ function ViewPanelState() {
 
   const addPanel = (panel?: PanelInterface) => {
     // const newPanel = createPanel(panel || {})
-    BrowserEvents.once('TAB:CREATE', (data) => {
-      console.log('TAB:CREATE => ', data)
-    })
+    // BrowserEvents.once('TAB:CREATE', (data) => {
+    //   console.log('TAB:CREATE => ', data)
+    // })
     // setPanels(panels.length, newPanel)
     // return newPanel
     return {}
