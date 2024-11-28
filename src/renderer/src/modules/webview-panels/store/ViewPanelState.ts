@@ -4,7 +4,6 @@ import BrowserEvents from '@renderer/utils/browserEvents'
 
 export interface PanelInterface {
   id?: string
-  index?: number
   title?: string
   url?: string
   icon?: string
@@ -19,8 +18,8 @@ export interface PanelInterface {
   children?: PanelInterface[]
 }
 
-const createPanel = ({
-  index = 0,
+const initPanel = ({
+  id,
   title = 'New Edgeless Tab',
   url = '',
   icon = '',
@@ -34,8 +33,7 @@ const createPanel = ({
   split = 'horizontal'
 }: PanelInterface) => {
   return {
-    id: String(Math.random()),
-    index,
+    id,
     title,
     url,
     icon,
@@ -56,14 +54,13 @@ function ViewPanelState() {
 
   const [panels, setPanels] = createStore<PanelInterface[]>([])
 
-  const addPanel = (panel?: PanelInterface) => {
-    // const newPanel = createPanel(panel || {})
-    // BrowserEvents.once('TAB:CREATE', (data) => {
-    //   console.log('TAB:CREATE => ', data)
-    // })
-    // setPanels(panels.length, newPanel)
-    // return newPanel
-    return {}
+  const addPanel = async () => {
+    const newPanel = await BrowserEvents.invoke('TAB:CREATE')
+    const containerPanel = initPanel({
+      id: newPanel.id
+    })
+
+    setPanels(panels.length, containerPanel)
   }
 
   const removePanel = (id: string) => {
