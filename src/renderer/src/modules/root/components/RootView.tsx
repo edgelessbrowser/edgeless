@@ -6,6 +6,8 @@ import ViewPanelContainer from '../../webview-panels/components/ViewPanelContain
 import useEvents from '../../../hooks/useEvents'
 import RootState from '../store/RootState'
 import { Architecture, OSName, Theme } from '@renderer/shared/types'
+import ToolbarState from '@renderer/modules/toolbar/store/ToolbarState'
+import SidebarState from '@renderer/modules/sidebar/store/SidebarState'
 
 export default function RootView() {
   useEvents({
@@ -29,6 +31,20 @@ export default function RootView() {
     broadcast: false,
     callback: (data) => {
       RootState.setIsMaximized(data)
+    }
+  })
+
+  useEvents({
+    channel: 'baseWindow:toogleToolbar',
+    callback: () => {
+      ToolbarState.toggleToolbar()
+    }
+  })
+
+  useEvents({
+    channel: 'baseWindow:toogleSidebar',
+    callback: () => {
+      SidebarState.toggleSidebar()
     }
   })
 
