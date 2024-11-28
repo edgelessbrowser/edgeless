@@ -50,49 +50,21 @@ export interface PanelInterface {
   canGoForward?: boolean
   base?: BaseWindow
   container?: WebContentsView
-  panel?: WebContentsView
+  panelWindow?: WebContentsView
   children?: PanelInterface[]
   split?: 'none' | 'horizontal' | 'vertical'
 }
 
 export const panels: PanelInterface[] = []
 
-// export const createArgs = ({
-//   index = 0,
-//   title = 'New Edgeless Tab',
-//   url = '',
-//   icon = '',
-//   loading = true,
-//   progress = 0,
-//   canGoBack = false,
-//   canGoForward = false,
-//   isFocused = true,
-//   width = 100,
-//   isVisible = true,
-//   split = 'horizontal',
-//   children = []
-// }: PanelInterface) => {
-//   const newPanel = {
-//     id: uid(12),
-//     index,
-//     title,
-//     url,
-//     icon,
-//     loading,
-//     progress,
-//     canGoBack,
-//     canGoForward,
-//     isFocused,
-//     width,
-//     isVisible,
-//     split,
-//     children
-//   }
-
-//   panels.push(newPanel)
-
-//   return newPanel
-// }
+export function removePanel(id: string): boolean {
+  const index = panels.findIndex((panel) => panel.id === id)
+  if (index === -1) {
+    return false
+  }
+  panels.splice(index, 1)
+  return true
+}
 
 export const createPanel = (props: PanelInterface) => {
   const attributes = {
@@ -110,7 +82,7 @@ export const createPanel = (props: PanelInterface) => {
     width: 100,
     height: 100,
     isVisible: true,
-    split: 'none',
+    split: 'none' as 'none' | 'horizontal' | 'vertical',
     ...props
   }
 
@@ -140,7 +112,8 @@ export const createPanel = (props: PanelInterface) => {
   //   showSearchWithGoogle: true
   // })
 
-  base.contentView.addChildView(panel)
+  // base.contentView.addChildView(panel)
+  // base.contentView.removeChildView(panel)
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     panel.webContents.loadURL(attributes.url)
@@ -174,5 +147,9 @@ export const createPanel = (props: PanelInterface) => {
     panel.webContents.insertCSS(resetCss())
   })
 
-  return { panel, ...attributes }
+  const panelItem = { panelWindow: panel, ...attributes }
+
+  panels.push(panelItem)
+
+  return panelItem
 }
