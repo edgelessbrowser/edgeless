@@ -87,7 +87,7 @@ function WindowToolbar() {
         </button>
       </form>
       <Box class="win-no-drag">
-        <ToolbarButton onClick={addNewTab} title="New tab">
+        <ToolbarButton onClick={ViewPanelState.addPanel} title="New tab">
           <IconPlus class="w-5 h-5" stroke="2" />
         </ToolbarButton>
       </Box>
