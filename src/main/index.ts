@@ -19,7 +19,7 @@ import {
 
 import { baseWindow } from './windows/baseWindow'
 import { containerWindow } from './windows/containerWindow'
-import { createPanel } from './web_panels/createPanel'
+import { createPanel, panels, removePanel } from './web_panels/createPanel'
 
 const getOsName = () => {
   switch (os.platform()) {
@@ -107,65 +107,6 @@ function createWindow(): void {
   container = containerWindow({ base, preload: join(__dirname, '../preload/index.js') })
 }
 
-// const createPanel = ({ id, url, x, y, width, height }) => {
-//   const panel = new WebContentsView({
-//     webPreferences: {
-//       nodeIntegration: false
-//     }
-//   })
-
-//   panel.setBorderRadius(6)
-
-//   panel.setBackgroundColor('#475569')
-//   panel.webContents.userAgent =
-//     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-
-//   // contextMenu({
-//   //   window: panel.webContents,
-//   //   showSaveImageAs: true,
-//   //   showInspectElement: true,
-//   //   showSearchWithGoogle: true
-//   // })
-
-//   base.contentView.addChildView(panel)
-
-//   if (url) {
-//     panel.webContents.loadURL(url)
-//   } else if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-//     panel.webContents.loadURL(process.env['ELECTRON_RENDERER_URL'] + '#page=default-page')
-//   } else {
-//     panel.webContents.loadFile(join(__dirname, '../renderer/index.html#page=default-page'))
-//   }
-
-//   panel.setBounds({
-//     width,
-//     height,
-//     x,
-//     y
-//   })
-
-//   panel.webContents.on('focus', () => {
-//     container.webContents.send('panel:focused', { name: id })
-//   })
-
-//   panel.webContents.on('page-title-updated', () => {
-//     const title = panel.webContents.getTitle()
-//     container.webContents.send('PANEL:UPDATE', { id, title })
-//   })
-
-//   panel.webContents.on('update-target-url', () => {
-//     const url = panel.webContents.getURL()
-//     container.webContents.send('PANEL:UPDATE', { id, url })
-//   })
-
-//   panel.webContents.on('dom-ready', () => {
-//     panel.setBackgroundColor('#ffffff')
-//     panel.webContents.insertCSS(resetCss())
-//   })
-
-//   return panel
-// }
-
 app.whenReady().then(() => {
   createWindow()
   container.webContents.openDevTools()
@@ -221,12 +162,17 @@ app.whenReady().then(() => {
       y: data.y
     }
 
+    console.log('main PANEL:BOUND_UPDATE => ', data)
+
     panels.forEach((panel: any) => {
-      if (panel.id === data.id) {
-        panel.wcv.setBounds({
-          ...panel.wcv.getBounds(),
+      if (panel.id === data.panelId) {
+        console.log('found the panel:', panel)
+        panel.panelWindow.setBounds({
+          ...panel.panelWindow.getBounds(),
           ...newBounds
         })
+
+        base.contentView.addChildView(panel.panelWindow)
       }
     })
   })
@@ -236,7 +182,7 @@ app.whenReady().then(() => {
 
     panels.forEach((panel: any) => {
       if (panel.id === id) {
-        panel.wcv.webContents.loadURL(url)
+        panel.panelWindow.webContents.loadURL(url)
       }
     })
   })
@@ -282,7 +228,6 @@ app.whenReady().then(() => {
     base.close()
   })
 
-  let panels = []
   ipcMain.handle('TAB:CREATE', async () => {
     return new Promise(function (resolve, reject) {
       console.log('create panel')
@@ -294,46 +239,25 @@ app.whenReady().then(() => {
       })
 
       if (newPanel.id) {
-        delete newPanel.base
-        delete newPanel.container
-        delete (newPanel as any).panel
-
-        resolve(newPanel)
+        resolve({
+          id: newPanel.id
+        })
       } else {
         reject(new Error('Error creating panel'))
       }
     })
-    // console.log('create panel')
-    // const newPanel = createPanel({
-    //   base,
-    //   container,
-    //   width: 300,
-    //   height: 200
-    // })
-
-    // if (newPanel.id) {
-    //   delete newPanel.base
-    //   delete newPanel.container
-    //   delete (newPanel as any).panel
-
-    //   setInterval(() => {
-    //     event.reply('TAB:CREATE', { cool: 1 })
-    //   }, 1000)
-
-    //   event.reply('TAB:CREATE', newPanel)
-    // }
   })
 
   ipcMain.on('TAB:REMOVE', (_, panelId) => {
     const panel: any = panels.find((panel: any) => panel.id === panelId)
     console.log('destroy panel:', panel)
 
-    if (panel.wcv && panel.wcv.webContents) {
-      base.contentView.removeChildView(panel.wcv)
-      panel.wcv.webContents.destroy()
+    if (panel.panelWindow && panel.panelWindow.webContents) {
+      base.contentView.removeChildView(panel.panelWindow)
+      panel.panelWindow.webContents.destroy()
     }
 
-    panels = panels.filter((panel: any) => panel.id !== panelId)
+    removePanel(panelId)
   })
 
   app.on('activate', function () {
