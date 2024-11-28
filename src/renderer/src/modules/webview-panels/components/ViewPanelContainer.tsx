@@ -1,10 +1,11 @@
+import { For } from 'solid-js'
 import ViewPanel from './ViewPanel'
 import Resizable from '@corvu/resizable'
-import ViewPanelState from '../store/ViewPanelState'
+import ViewPanelState, { PanelInterface } from '../store/ViewPanelState'
 
 function ResizeHandle() {
   return (
-    <Resizable.Handle aria-label="Resize panels" class="group basis-1.5">
+    <Resizable.Handle aria-label="Resize panels" class="group basis-[5px]">
       <div
         class={`
           group-active:bg-slate-500 group-dragging:bg-slate-500
@@ -18,26 +19,42 @@ function ResizeHandle() {
 
 function ViewPanelContainer() {
   return (
-    <div class="flex w-full h-full p-1.5 pt-1">
-      <Resizable class="size-full">
-        <Resizable.Panel minSize="250px">
-          <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
-        </Resizable.Panel>
-        <ResizeHandle />
-        <Resizable.Panel minSize="250px">
-          <Resizable class="size-full" orientation="vertical">
-            <Resizable.Panel minSize="200px">
-              <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
-            </Resizable.Panel>
-            <ResizeHandle />
-            <Resizable.Panel minSize="200px">
-              <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
-            </Resizable.Panel>
-          </Resizable>
-        </Resizable.Panel>
-      </Resizable>
+    <div class="flex w-full h-full p-[5px]">
+      <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For>
     </div>
   )
+
+  // return ViewPanelState.panels.length ? (
+  //   <div class="flex w-full h-full p-[5px]">
+  //     <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For>
+  //   </div>
+  // ) : (
+  //   <div class="flex w-full h-full p-[5px]">
+  //     <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For>
+  //   </div>
+  // )
+
+  // return (
+  //   <div class="flex w-full h-full p-[5px]">
+  //     <Resizable class="size-full border-2">
+  //       <Resizable.Panel>
+  //         <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
+  //       </Resizable.Panel>
+  //       <ResizeHandle />
+  //       <Resizable.Panel minSize="250px">
+  //         <Resizable class="size-full" orientation="vertical">
+  //           <Resizable.Panel minSize="200px">
+  //             <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
+  //           </Resizable.Panel>
+  //           <ResizeHandle />
+  //           <Resizable.Panel minSize="200px">
+  //             <ViewPanel panel={ViewPanelState.getVisiblePanel()} />
+  //           </Resizable.Panel>
+  //         </Resizable>
+  //       </Resizable.Panel>
+  //     </Resizable>
+  //   </div>
+  // )
 }
 
 export default ViewPanelContainer
