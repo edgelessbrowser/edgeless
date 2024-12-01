@@ -8,7 +8,7 @@ import { removeTab } from '../../webview-panels/utils/webViewManagement'
 function Sidebar() {
   return (
     <Box
-      class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-200 transform-gpu"
+      class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-75 transform-gpu"
       style={{
         width: SidebarState.viewSidebar() ? '220px' : '0px',
         opacity: SidebarState.viewSidebar() ? 1 : 0,
