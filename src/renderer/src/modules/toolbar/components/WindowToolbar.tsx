@@ -13,7 +13,6 @@ import SidebarState from '@renderer/modules/sidebar/store/SidebarState'
 import ToolbarState from '@renderer/modules/toolbar/store/ToolbarState'
 import ToolbarButton from '@renderer/modules/toolbar/components/ToolbarButton'
 import ViewPanelState from '@renderer/modules/webview-panels/store/ViewPanelState'
-import { addNewTab } from '@renderer/modules/webview-panels/utils/webViewManagement'
 import WindowControlButtons from '@renderer/modules/toolbar/components/WindowControlButtons'
 
 function WindowToolbar() {
