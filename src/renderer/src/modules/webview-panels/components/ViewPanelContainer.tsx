@@ -19,7 +19,7 @@ function ResizeHandle() {
 
 function ViewPanelContainer() {
   return (
-    <div class="flex w-full h-full p-[5px]">
+    <div class="flex w-full h-full p-[5px] pt-1">
       <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For>
     </div>
   )
