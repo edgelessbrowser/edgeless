@@ -187,6 +187,36 @@ app.whenReady().then(() => {
     })
   })
 
+  ipcMain.on('PANEL:RELOAD', (_, data: { id: string; url: string }) => {
+    const { id } = data
+
+    panels.forEach((panel: any) => {
+      if (panel.id === id) {
+        panel.panelWindow.webContents.reload()
+      }
+    })
+  })
+
+  ipcMain.on('PANEL:GO_BACK', (_, data: { id: string }) => {
+    const { id } = data
+
+    panels.forEach((panel: any) => {
+      if (panel.id === id) {
+        panel.panelWindow.webContents.goBack()
+      }
+    })
+  })
+
+  ipcMain.on('PANEL:GO_FORWARD', (_, data: { id: string }) => {
+    const { id } = data
+
+    panels.forEach((panel: any) => {
+      if (panel.id === id) {
+        panel.panelWindow.webContents.goForward()
+      }
+    })
+  })
+
   ipcMain.on('BROWSER:GET_SYSTEM_INFO', (event) => {
     const osName = getOsName()
     const systemTheme = getSystemTheme()
