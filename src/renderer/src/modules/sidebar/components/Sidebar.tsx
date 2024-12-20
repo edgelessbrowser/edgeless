@@ -22,9 +22,11 @@ function Sidebar() {
               class={`
                 group select-none flex items-center justify-between px-2 h-8 ml-1 mr-0 rounded-md 
                 ${
-                  panel.isVisible ? 'bg-slate-700' : 'bg-slate-700/30'
-                } hover:bg-slate-700/80 active:bg-slate-700 cursor-pointer 
-                relative
+                  panel.isVisible
+                    ? 'bg-slate-700 border-slate-500 shadow-sm shadow-slate-800/80'
+                    : 'bg-slate-700/40 border-slate-500/90 shadow-none'
+                } hover:bg-slate-700/90 active:bg-slate-700 cursor-pointer 
+                relative border
               `}
               onClick={() => {
                 ViewPanelState.setAsVisible(panel.id ?? '')
