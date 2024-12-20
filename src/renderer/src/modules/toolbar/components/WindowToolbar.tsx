@@ -37,6 +37,20 @@ function WindowToolbar() {
     })
   }
 
+  const handleGoBack = () => {
+    const activePanel = ViewPanelState.getVisiblePanel()
+    BrowserEvents.send('PANEL:GO_BACK', {
+      id: activePanel?.id
+    })
+  }
+
+  const handleGoForward = () => {
+    const activePanel = ViewPanelState.getVisiblePanel()
+    BrowserEvents.send('PANEL:GO_FORWARD', {
+      id: activePanel?.id
+    })
+  }
+
   return (
     <Box
       class="text-center flex items-center justify-center gap-3 win-drag transition-[height,opacity] duration-200 transform-gpu relative"
@@ -47,11 +61,11 @@ function WindowToolbar() {
       }}
     >
       <Box>
-        <ToolbarButton class="pr-2" title="Go back">
+        <ToolbarButton class="pr-2" title="Go back" onclick={handleGoBack}>
           <IconChevronLeft class="w-5 h-5" stroke="2" />
         </ToolbarButton>
 
-        <ToolbarButton title="Go forward">
+        <ToolbarButton title="Go forward" onclick={handleGoForward}>
           <IconChevronRight class="w-5 h-5" stroke="2" />
         </ToolbarButton>
       </Box>
