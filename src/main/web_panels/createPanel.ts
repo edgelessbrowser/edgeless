@@ -1,7 +1,7 @@
 import { uid } from 'uid'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
-import { BaseWindow, WebContentsView } from 'electron'
+import { Menu, BaseWindow, WebContentsView } from 'electron'
 
 function resetCss() {
   return ''
@@ -69,7 +69,9 @@ export const createPanel = (props: PanelInterface) => {
 
   const panel = new WebContentsView({
     webPreferences: {
-      nodeIntegration: false
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true
     }
   })
 
@@ -79,12 +81,29 @@ export const createPanel = (props: PanelInterface) => {
   panel.webContents.userAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 EdgelessBrowser/1.0'
 
-  // contextMenu({
-  //   window: panel.webContents,
-  //   showSaveImageAs: true,
-  //   showInspectElement: true,
-  //   showSearchWithGoogle: true
-  // })
+  let currentMousePosition = { x: 120, y: 140 }
+
+  const contextMenuTemplate = [
+    {
+      label: 'Reload',
+      click: () => panel.webContents.reload()
+    },
+    {
+      label: 'Open DevTools',
+      click: () => panel.webContents.openDevTools()
+    },
+    {
+      label: 'Inspect Element',
+      click: () => panel.webContents.inspectElement(currentMousePosition.x, currentMousePosition.y)
+    }
+  ]
+
+  const contextMenu = Menu.buildFromTemplate(contextMenuTemplate)
+
+  panel.webContents.on('context-menu', (event, params) => {
+    currentMousePosition = { x: params.x, y: params.y }
+    contextMenu.popup()
+  })
 
   // base.contentView.addChildView(panel)
   // base.contentView.removeChildView(panel)
