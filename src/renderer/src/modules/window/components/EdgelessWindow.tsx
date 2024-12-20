@@ -12,7 +12,6 @@ interface EdgelessWindowProps {
 function EdgelessWindow({ children }: EdgelessWindowProps) {
   onMount(() => {
     BrowserEvents.on('baseWindow:sizeUpdate', (data) => {
-      console.log('Received Bounds:', data)
       EdgelessWindowState.setBaseWindowSize({
         width: data.width + 'px',
         height: data.height + 'px'
@@ -37,7 +36,7 @@ function EdgelessWindow({ children }: EdgelessWindowProps) {
         width: EdgelessWindowState.baseWindowSize().width,
         height: EdgelessWindowState.baseWindowSize().height
       }}
-      class="bg-slate-600 border border-slate-500/60 text-white flex flex-col overflow-hidden"
+      class="bg-slate-600 text-white flex flex-col overflow-hidden"
     >
       {children}
     </div>
