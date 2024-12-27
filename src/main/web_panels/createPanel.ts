@@ -68,18 +68,38 @@ export const createPanel = (props: PanelInterface) => {
   }
 
   const panel = new WebContentsView({
+    // webPreferences: {
+    //   nodeIntegration: false,
+    //   contextIsolation: true,
+    //   sandbox: true,
+    //   experimentalFeatures: true
+    // }
+
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: true
+      sandbox: true,
+      enableBlinkFeatures: 'ExecutionContext',
+      // enableRemoteModule: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      offscreen: false,
+      experimentalFeatures: true,
+      safeDialogs: true,
+      safeDialogsMessage: 'Are you sure?',
+      additionalArguments: [],
+      nodeIntegrationInSubFrames: false,
+      nodeIntegrationInWorker: false,
+      webviewTag: false,
+      plugins: false,
+      scrollBounce: false,
+      spellcheck: true
     }
   })
 
   panel.setBorderRadius(4)
 
   panel.setBackgroundColor('#475569')
-  panel.webContents.userAgent =
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 EdgelessBrowser/1.0'
 
   let currentMousePosition = { x: 120, y: 140 }
 
