@@ -7,7 +7,7 @@ export const baseWindow = (): BaseWindow => {
     // transparent: true,
     frame: false,
     show: true,
-    // titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     titleBarOverlay: false,
     backgroundColor: '#475569',
     // center: false,
