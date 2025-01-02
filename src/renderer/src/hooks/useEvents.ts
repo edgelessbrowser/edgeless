@@ -8,6 +8,7 @@ interface UseEventsInterface {
   channel: string
   broadcast?: boolean
   listenOnce?: boolean
+  invoke?: boolean
   callback: BrowserMessageCallback
 }
 
@@ -16,20 +17,27 @@ function useEvents({
   callback,
   broadcast,
   payload,
+  invoke = false,
   listenOnce = false
 }: UseEventsInterface) {
   const listener: BrowserMessageCallback = (...args) => {
     callback(...args)
   }
 
-  if (broadcast) {
-    BrowserEvents.send(channel, payload)
-  }
-
-  if (listenOnce) {
-    BrowserEvents.once(channel, listener)
+  if (invoke) {
+    BrowserEvents.invoke(channel, payload).then((data) => {
+      callback(data)
+    })
   } else {
-    BrowserEvents.on(channel, listener)
+    if (broadcast) {
+      BrowserEvents.send(channel, payload)
+    }
+
+    if (listenOnce) {
+      BrowserEvents.once(channel, listener)
+    } else {
+      BrowserEvents.on(channel, listener)
+    }
   }
 
   onCleanup(() => {
