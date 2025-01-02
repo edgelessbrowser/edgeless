@@ -109,7 +109,7 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   createWindow()
-  container.webContents.openDevTools()
+  // container.webContents.openDevTools()
 
   if (isWindows) {
     getMaximizedMonitorInfo(base)
@@ -162,11 +162,11 @@ app.whenReady().then(() => {
       y: data.y
     }
 
-    console.log('main PANEL:BOUND_UPDATE => ', data)
+    // console.log('main PANEL:BOUND_UPDATE => ', data)
 
     panels.forEach((panel: any) => {
       if (panel.id === data.panelId) {
-        console.log('found the panel:', panel)
+        // console.log('found the panel:', panel)
         panel.panelWindow.setBounds({
           ...panel.panelWindow.getBounds(),
           ...newBounds
@@ -222,9 +222,9 @@ app.whenReady().then(() => {
     const systemTheme = getSystemTheme()
     const architecture = getArchitecture()
 
-    console.log('osName:', osName)
-    console.log('systemTheme:', systemTheme)
-    console.log('architecture:', architecture)
+    // console.log('osName:', osName)
+    // console.log('systemTheme:', systemTheme)
+    // console.log('architecture:', architecture)
 
     event.reply('BROWSER:GET_SYSTEM_INFO', {
       osName,
@@ -258,9 +258,8 @@ app.whenReady().then(() => {
     base.close()
   })
 
-  ipcMain.handle('TAB:CREATE', async () => {
+  ipcMain.handle('PANEL:CREATE', async () => {
     return new Promise(function (resolve, reject) {
-      console.log('create panel')
       const newPanel = createPanel({
         base,
         container,
@@ -278,9 +277,27 @@ app.whenReady().then(() => {
     })
   })
 
+  ipcMain.handle('PANEL:GET_ALL', async () => {
+    if (panels.length < 1) {
+      return []
+    }
+
+    return panels.map((panel: any) => {
+      return {
+        ...panel,
+        panelWindow: undefined
+      }
+    })
+  })
+
+  ipcMain.on('baseWindow:toggleTrafficLights', (_, data) => {
+    console.log('baseWindow:toggleTrafficLights => ', data)
+    base.setWindowButtonVisibility(data.nextToolbarState)
+  })
+
   ipcMain.on('TAB:REMOVE', (_, panelId) => {
     const panel: any = panels.find((panel: any) => panel.id === panelId)
-    console.log('destroy panel:', panel)
+    // console.log('destroy panel:', panel)
 
     if (panel.panelWindow && panel.panelWindow.webContents) {
       base.contentView.removeChildView(panel.panelWindow)
