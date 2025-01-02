@@ -45,7 +45,7 @@ export const createPanel = (props: PanelInterface) => {
     x: 0,
     y: 0,
     id: uid(12),
-    title: 'New Edgeless Tab',
+    title: 'New Tab',
     url: process.env['ELECTRON_RENDERER_URL'] + '#page=default-page',
     icon: '',
     loading: false,
