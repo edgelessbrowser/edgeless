@@ -101,6 +101,13 @@ export const createPanel = (props: PanelInterface) => {
 
   panel.setBackgroundColor('#475569')
 
+  const session = panel.webContents.session
+  session.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] =
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 EdgelessBrowser/1.1.1'
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
+  })
+
   let currentMousePosition = { x: 120, y: 140 }
 
   const contextMenuTemplate = [
