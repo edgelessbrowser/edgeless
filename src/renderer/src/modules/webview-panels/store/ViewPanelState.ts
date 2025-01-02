@@ -20,7 +20,7 @@ export interface PanelInterface {
 
 const initPanel = ({
   id,
-  title = 'New Edgeless Tab',
+  title = 'New Tab',
   url = '',
   icon = '',
   loading = true,
