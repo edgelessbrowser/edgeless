@@ -54,10 +54,11 @@ function ViewPanelState() {
 
   const [panels, setPanels] = createStore<PanelInterface[]>([])
 
-  const addPanel = async () => {
-    const newPanel = await BrowserEvents.invoke('PANEL:CREATE')
+  const addPanel = async ({ url }: { url?: string }) => {
+    const newPanel = await BrowserEvents.invoke('PANEL:CREATE', url ? { url } : {})
     const containerPanel = initPanel({
-      id: newPanel.id
+      id: newPanel.id,
+      url
     })
 
     setPanels(panels.length, containerPanel)
