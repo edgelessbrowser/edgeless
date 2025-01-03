@@ -258,13 +258,20 @@ app.whenReady().then(() => {
     base.close()
   })
 
-  ipcMain.handle('PANEL:CREATE', async () => {
+  ipcMain.handle('PANEL:CREATE', async (_, { url = undefined }) => {
     return new Promise(function (resolve, reject) {
+      const props: { url?: string } = {}
+
+      if (url) {
+        props.url = url
+      }
+
       const newPanel = createPanel({
         base,
         container,
         width: 300,
-        height: 200
+        height: 200,
+        ...props
       })
 
       if (newPanel.id) {
