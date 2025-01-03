@@ -127,6 +127,16 @@ export const createPanel = (props: PanelInterface) => {
 
   const contextMenu = Menu.buildFromTemplate(contextMenuTemplate)
 
+  panel.webContents.setWindowOpenHandler(({ url, disposition, features, frameName }) => {
+    // console.log('window open handlers:', { url, disposition, features, frameName })
+    if (disposition !== 'new-window') {
+      container.webContents.send('PANEL:REQUEST_CREATE_NEW', { url })
+      return { action: 'deny' }
+    }
+
+    return { action: 'allow' }
+  })
+
   panel.webContents.on('context-menu', (event, params) => {
     currentMousePosition = { x: params.x, y: params.y }
     contextMenu.popup()
