@@ -32,7 +32,7 @@ export default function RootView() {
     channel: 'PANEL:GET_ALL',
     callback: (data) => {
       if (data.length === 0) {
-        ViewPanelState.addPanel()
+        ViewPanelState.addPanel({})
       }
     }
   })
@@ -56,6 +56,13 @@ export default function RootView() {
     channel: 'baseWindow:toogleSidebar',
     callback: () => {
       SidebarState.toggleSidebar()
+    }
+  })
+
+  useEvents({
+    channel: 'PANEL:REQUEST_CREATE_NEW',
+    callback: ({ url }) => {
+      ViewPanelState.addPanel({ url })
     }
   })
 
