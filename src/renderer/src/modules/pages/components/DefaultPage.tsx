@@ -1,5 +1,5 @@
-import Box from '../../ui/components/Box'
 import { createEffect } from 'solid-js'
+import Box from '../../ui/components/Box'
 
 export default function DefaultPage() {
   createEffect(() => {
@@ -13,7 +13,9 @@ export default function DefaultPage() {
       text-sm text-white bg-slate-700
     `}
     >
-      <h1 class="font-bold text-3xl text-slate-800/60 select-none">Eon Browser</h1>
+      <h1 class="font-bold text-4xl text-slate-800/70 select-none pointer-events-none">
+        Eon Browser
+      </h1>
     </Box>
   )
 }
