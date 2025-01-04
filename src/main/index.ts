@@ -20,6 +20,7 @@ import {
 import { baseWindow } from './windows/baseWindow'
 import { containerWindow } from './windows/containerWindow'
 import { createPanel, panels, removePanel } from './web_panels/createPanel'
+import { is } from '@electron-toolkit/utils'
 
 const getOsName = () => {
   switch (os.platform()) {
@@ -66,7 +67,6 @@ const getArchitecture = () => {
 // const isLinux = process.platform === 'linux'
 // const isMacOs = process.platform === 'darwin'
 const isWindows = process.platform === 'win32'
-// const isDev = is.dev
 
 let base: BaseWindow
 let container: WebContentsView
@@ -202,7 +202,7 @@ app.whenReady().then(() => {
 
     panels.forEach((panel: any) => {
       if (panel.id === id) {
-        panel.panelWindow.webContents.goBack()
+        panel.panelWindow.webContents.navigationHistory.goBack()
       }
     })
   })
@@ -212,7 +212,7 @@ app.whenReady().then(() => {
 
     panels.forEach((panel: any) => {
       if (panel.id === id) {
-        panel.panelWindow.webContents.goForward()
+        panel.panelWindow.webContents.navigationHistory.goForward()
       }
     })
   })
@@ -221,10 +221,6 @@ app.whenReady().then(() => {
     const osName = getOsName()
     const systemTheme = getSystemTheme()
     const architecture = getArchitecture()
-
-    // console.log('osName:', osName)
-    // console.log('systemTheme:', systemTheme)
-    // console.log('architecture:', architecture)
 
     event.reply('BROWSER:GET_SYSTEM_INFO', {
       osName,
@@ -320,7 +316,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin' || is.dev) {
     app.quit()
   }
 })
