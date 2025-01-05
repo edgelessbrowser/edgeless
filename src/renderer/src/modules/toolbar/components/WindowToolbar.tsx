@@ -3,9 +3,10 @@ import {
   IconPlus,
   IconReload,
   IconLayoutSidebar,
-  // IconCaretDownFilled,
   IconChevronLeft,
-  IconChevronRight
+  IconChevronRight,
+  IconBookmark,
+  IconDotsVertical
 } from '@tabler/icons-solidjs'
 import Box from '@renderer/modules/ui/components/Box'
 import BrowserEvents from '@renderer/utils/browserEvents'
@@ -61,7 +62,17 @@ function WindowToolbar() {
       }}
     >
       <Box>
-        <ToolbarButton class="pr-2" title="Go back" onclick={handleGoBack}>
+        <ToolbarButton onClick={SidebarState.toggleSidebar} title="Toggle sidebar">
+          <IconLayoutSidebar class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
+
+        <ToolbarButton title="Bookmarks" onclick={handleGoBack}>
+          <IconBookmark class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
+      </Box>
+
+      <Box>
+        <ToolbarButton title="Go back" onclick={handleGoBack}>
           <IconChevronLeft class="w-5 h-5" stroke="2" />
         </ToolbarButton>
 
@@ -70,14 +81,9 @@ function WindowToolbar() {
         </ToolbarButton>
       </Box>
 
-      <ToolbarButton onClick={SidebarState.toggleSidebar} title="Toggle sidebar">
-        <IconLayoutSidebar class="w-5 h-5" stroke="2" />
-      </ToolbarButton>
-
       <ToolbarButton onClick={handleReload} title="Reload page">
         <IconReload class="w-5 h-5" stroke="2" />
       </ToolbarButton>
-
       <form class="w-3/6 h-full py-0.5 win-no-drag flex relative mt-0.5" onSubmit={handleSubmit}>
         <input
           class={`
@@ -103,8 +109,10 @@ function WindowToolbar() {
         <ToolbarButton onClick={ViewPanelState.addPanel} title="New tab">
           <IconPlus class="w-5 h-5" stroke="2" />
         </ToolbarButton>
+        <ToolbarButton title="Options">
+          <IconDotsVertical class="w-5 h-5" stroke="2" />
+        </ToolbarButton>
       </Box>
-
       <WindowControlButtons />
     </Box>
   )
