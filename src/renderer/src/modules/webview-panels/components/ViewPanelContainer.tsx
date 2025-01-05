@@ -1,4 +1,4 @@
-import { For } from 'solid-js'
+import { For, Show, createEffect, createSignal } from 'solid-js'
 import ViewPanel from './ViewPanel'
 import Resizable from '@corvu/resizable'
 import ViewPanelState, { PanelInterface } from '../store/ViewPanelState'
@@ -18,9 +18,19 @@ function ResizeHandle() {
 }
 
 function ViewPanelContainer() {
+  const [visiblePanel, setVisiblePanel] = createSignal<PanelInterface | undefined>(undefined)
+
+  createEffect(() => {
+    setVisiblePanel(ViewPanelState.getVisiblePanel())
+  })
+
   return (
-    <div class="flex w-full h-full p-[5px] pt-1">
-      <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For>
+    <div class="w-full h-full p-[5px] pt-1">
+      {/* <For each={ViewPanelState.panels}>{(panel) => <ViewPanel panel={panel} />}</For> */}
+      {/* {visiblePanel() ? <ViewPanel panel={visiblePanel()} /> : null} */}
+      <Show when={visiblePanel() !== undefined}>
+        <ViewPanel panel={visiblePanel() as PanelInterface} />
+      </Show>
     </div>
   )
 
