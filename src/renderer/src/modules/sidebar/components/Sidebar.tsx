@@ -4,8 +4,40 @@ import { IconX } from '@tabler/icons-solidjs'
 import SidebarState from '../store/SidebarState'
 import ViewPanelState from '../../webview-panels/store/ViewPanelState'
 import { removeTab } from '../../webview-panels/utils/webViewManagement'
+import Tree, { TreeItem } from '@renderer/components/Tree'
 
 function Sidebar() {
+  const sampleData: TreeItem[] = [
+    {
+      id: '1',
+      name: 'Folder 1',
+      type: 'folder', // Must match the literal type
+      children: [
+        { id: '2', name: 'File A', type: 'file' },
+        {
+          id: '3',
+          name: 'Subfolder',
+          type: 'folder',
+          children: [
+            { id: '4', name: 'File B', type: 'file' },
+            { id: '8', name: 'File C', type: 'file' }
+          ]
+        }
+      ]
+    },
+    {
+      id: '5',
+      name: 'Folder 2',
+      type: 'folder',
+      children: [{ id: '6', name: 'File D', type: 'file' }]
+    },
+    {
+      id: '7',
+      name: 'Orphan File',
+      type: 'file'
+    }
+  ]
+
   return (
     <Box
       class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-75 transform-gpu"
@@ -47,6 +79,10 @@ function Sidebar() {
             </Box>
           )}
         </For>
+
+        <Box class="pl-1.5">
+          <Tree data={sampleData} />
+        </Box>
       </Box>
     </Box>
   )
