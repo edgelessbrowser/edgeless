@@ -63,17 +63,17 @@ export function registerIpcHandlers(base: BaseWindow, container: WebContentsView
     })
   })
 
-  ipcMain.on('BROWSER:GET_SYSTEM_INFO', (event) => {
+  ipcMain.handle('BROWSER:GET_SYSTEM_INFO', () => {
     const osName = getOsName()
     const systemTheme = getSystemTheme()
     const architecture = getArchitecture()
 
-    event.reply('BROWSER:GET_SYSTEM_INFO', {
+    return {
       osName,
       systemTheme,
       architecture,
       isMaximized: base.isMaximized()
-    })
+    }
   })
 
   ipcMain.on('BROWSER:MINIMIZE', () => {

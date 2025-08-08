@@ -12,6 +12,7 @@ import { baseWindow } from './windows/baseWindow'
 import { containerWindow } from './windows/containerWindow'
 import { is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from './events'
+import contextMenu from 'electron-context-menu'
 
 const isWindows = process.platform === 'win32'
 
@@ -52,6 +53,7 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
+  contextMenu()
   createWindow()
 
   if (isWindows) {
