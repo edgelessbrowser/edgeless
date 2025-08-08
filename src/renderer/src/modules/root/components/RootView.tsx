@@ -11,7 +11,9 @@ import store, {
   setArchitecture,
   setIsMaximized,
   setOsName,
-  setTheme
+  setTheme,
+  toggleSidebar,
+  toggleToolbar
 } from '@renderer/store'
 import BrowserEvents from '@renderer/utils/browserEvents'
 
@@ -41,6 +43,20 @@ export default function RootView() {
     channel: 'PANEL:REQUEST_CREATE_NEW',
     callback: ({ url }) => {
       addPanel({ url })
+    }
+  })
+
+  useEvents({
+    channel: 'baseWindow:toogleToolbar',
+    callback: () => {
+      toggleToolbar()
+    }
+  })
+
+  useEvents({
+    channel: 'baseWindow:toogleSidebar',
+    callback: () => {
+      toggleSidebar()
     }
   })
 
