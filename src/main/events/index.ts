@@ -123,10 +123,20 @@ export function registerIpcHandlers(base: BaseWindow, container: WebContentsView
       return []
     }
 
-    return panels.map((panel: any) => {
+    return panels.map((panel) => {
       return {
-        ...panel,
-        panelWindow: undefined
+        id: panel.id,
+        title: panel.title,
+        url: panel.url,
+        icon: panel.icon,
+        loading: panel.loading,
+        progress: panel.progress,
+        canGoBack: panel.canGoBack,
+        canGoForward: panel.canGoForward,
+        isFocused: panel.isFocused,
+        width: panel.width,
+        isVisible: panel.isVisible,
+        split: panel.split
       }
     })
   })
