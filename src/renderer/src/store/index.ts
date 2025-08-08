@@ -44,6 +44,7 @@ const [store, setStore] = createStore({
   focuedTab: '',
   viewToolbar: true,
   viewSidebar: true,
+  baseWindowSize: { width: '100%', height: '100%' },
 
   get visiblePanel(): PanelInterface | undefined {
     return this.panels.find((panel) => panel.isVisible)
@@ -104,5 +105,8 @@ export const setFocusedTab = (id: string) => setStore('focuedTab', id)
 
 export const toggleToolbar = () => setStore('viewToolbar', (v) => !v)
 export const toggleSidebar = () => setStore('viewSidebar', (v) => !v)
+
+export const setBaseWindowSize = (size: { width: string; height: string }) =>
+  setStore('baseWindowSize', size)
 
 export default store

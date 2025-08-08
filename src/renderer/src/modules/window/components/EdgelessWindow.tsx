@@ -1,9 +1,12 @@
 import { onMount } from 'solid-js'
 import { JSX } from 'solid-js/jsx-runtime'
 import BrowserEvents from '../../../utils/browserEvents'
-import EdgelessWindowState from '../store/EdgelessWindowState'
-import ViewPanelState from '../../webview-panels/store/ViewPanelState'
-import { addNewTab } from '../../webview-panels/utils/webViewManagement'
+import store, {
+  setBaseWindowSize,
+  setFocusedTab,
+  updatePanelWithObject
+} from '@renderer/store'
+import { addNewTab } from '../../webview-panels/utils/panelManagement'
 
 interface EdgelessWindowProps {
   children: JSX.Element
@@ -12,29 +15,31 @@ interface EdgelessWindowProps {
 function EdgelessWindow({ children }: EdgelessWindowProps) {
   onMount(() => {
     BrowserEvents.on('baseWindow:sizeUpdate', (data) => {
-      EdgelessWindowState.setBaseWindowSize({
+      setBaseWindowSize({
         width: data.width + 'px',
         height: data.height + 'px'
       })
     })
 
     BrowserEvents.on('panel:focused', (data) => {
-      ViewPanelState.setFocusedTab(data.name)
+      setFocusedTab(data.name)
     })
 
     BrowserEvents.on('PANEL:UPDATE', (data) => {
       const { id, ...rest } = data
-      ViewPanelState.updatePanelWithObject(id, rest)
+      updatePanelWithObject(id, rest)
     })
 
-    addNewTab()
+    if (store.panels.length === 0) {
+      addNewTab()
+    }
   })
 
   return (
     <div
       style={{
-        width: EdgelessWindowState.baseWindowSize().width,
-        height: EdgelessWindowState.baseWindowSize().height
+        width: store.baseWindowSize.width,
+        height: store.baseWindowSize.height
       }}
       class="bg-slate-600 text-white flex flex-col overflow-hidden"
     >
