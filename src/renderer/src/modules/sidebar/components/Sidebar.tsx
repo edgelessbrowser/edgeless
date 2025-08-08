@@ -2,7 +2,7 @@ import { For } from 'solid-js'
 import Box from '../../ui/components/Box'
 import { IconX } from '@tabler/icons-solidjs'
 import store, { setAsVisible } from '@renderer/store'
-import { removeTab } from '../../webview-panels/utils/webViewManagement'
+import { removeTab } from '../../webview-panels/utils/panelManagement'
 import Tree, { TreeItem } from '@renderer/components/Tree'
 
 function Sidebar() {
