@@ -1,8 +1,7 @@
 import { For } from 'solid-js'
 import Box from '../../ui/components/Box'
 import { IconX } from '@tabler/icons-solidjs'
-import SidebarState from '../store/SidebarState'
-import ViewPanelState from '../../webview-panels/store/ViewPanelState'
+import store, { setAsVisible } from '@renderer/store'
 import { removeTab } from '../../webview-panels/utils/webViewManagement'
 import Tree, { TreeItem } from '@renderer/components/Tree'
 
@@ -11,7 +10,7 @@ function Sidebar() {
     {
       id: '1',
       name: 'Folder 1',
-      type: 'folder', // Must match the literal type
+      type: 'folder',
       children: [
         { id: '2', name: 'File A', type: 'file' },
         {
@@ -42,13 +41,13 @@ function Sidebar() {
     <Box
       class="flex-shrink-0 border-r-0 border-r-slate-500 transition-[width,opacity] duration-75 transform-gpu"
       style={{
-        width: SidebarState.viewSidebar() ? '220px' : '0px',
-        opacity: SidebarState.viewSidebar() ? 1 : 0,
-        'user-select': SidebarState.viewSidebar() ? 'auto' : 'none'
+        width: store.viewSidebar ? '220px' : '0px',
+        opacity: store.viewSidebar ? 1 : 0,
+        'user-select': store.viewSidebar ? 'auto' : 'none'
       }}
     >
       <Box class="flex flex-col gap-1 w-[220px] mt-1 h-full">
-        <For each={ViewPanelState.panels}>
+        <For each={store.panels}>
           {(panel) => (
             <Box
               class={`
@@ -61,7 +60,7 @@ function Sidebar() {
                 relative border
               `}
               onClick={() => {
-                ViewPanelState.setAsVisible(panel.id ?? '')
+                setAsVisible(panel.id ?? '')
               }}
             >
               <p class="text-xs truncate">{panel.title}</p>

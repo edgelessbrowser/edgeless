@@ -1,43 +1,58 @@
-# Edgeless Browser
+# Eon Browser
 
-<img src="./assets/Edgeless%20Logo.png" alt="Edgeless Browser" align="center" height="300" width="300" />
+<img src="./assets/Eon%20Logo.png" alt="Eon Browser" align="center" height="300" width="300" />
 
-Edgeless Browser is a browser that is built on top of the electron framework and uses the solidjs library for the front end. The browser is a work in progress and is not yet ready for use. The browser is being built to be a more privacy focused browser that is secure and minimalistic. The browser is being built by Hasan and is open source so feel free to contribute to the project.
+Eon Browser is a minimal and privacy-focused web browser built on top of the Electron framework and SolidJS. The browser is a work in progress and is not yet ready for production use. It is an open-source project, and contributions are welcome.
 
 ![App Screenshot](./screenshots/Screenshot_2024-09-30.png)
 
-### getting started
+### Getting Started
 
-to get started install the dependencies in both the app and electron directories
+To get started with Eon Browser, follow these steps:
 
-```bash
-git clone https://github.com/edgelessbrowser/edgeless
+1.  **Clone the repository:**
 
-# cd
-cd edgeless
+    ```bash
+    git clone https://github.com/edgelessbrowser/edgeless.git
+    ```
 
-# installing app (solidjs) dependecies
-cd app
-yarn install
+2.  **Navigate to the project directory:**
 
-# Run the app in development mode
-yarn dev
-```
+    ```bash
+    cd edgeless
+    ```
 
-### Workspace Package Installation
+3.  **Install the dependencies:**
 
-To add a package to a specific workspace, you can use the following command:
+    ```bash
+    npm install
+    ```
 
-```bash
-yarn workspace <workspace_name> add <package_name>
-```
+4.  **Run the app in development mode:**
 
-For example, to add the `react-dom` package to the `app` workspace, run:
+    ```bash
+    npm run dev
+    ```
 
-```bash
-yarn workspace app add react-dom
-```
+### Building for Production
+
+To build the application for production, use the following commands:
+
+-   **Build for Windows:**
+    ```bash
+    npm run build:win
+    ```
+-   **Build for macOS:**
+    ```bash
+    npm run build:mac
+    ```
+-   **Build for Linux:**
+    ```bash
+    npm run build:linux
+    ```
 
 > More information is coming soon.
+
+---
 
 Tweet at [@rakibtg](https://twitter.com/rakibtg)

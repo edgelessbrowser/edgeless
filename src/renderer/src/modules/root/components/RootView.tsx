@@ -1,39 +1,31 @@
+import { onMount } from 'solid-js'
 import Box from '../../ui/components/Box'
-import RootState from '../store/RootState'
 import useEvents from '../../../hooks/useEvents'
 import Sidebar from '../../sidebar/components/Sidebar'
 import WindowToolbar from '../../toolbar/components/WindowToolbar'
 import EdgelessWindow from '../../window/components/EdgelessWindow'
 import { Architecture, OSName, Theme } from '@renderer/shared/types'
-import ToolbarState from '@renderer/modules/toolbar/store/ToolbarState'
-import SidebarState from '@renderer/modules/sidebar/store/SidebarState'
-import ViewPanelState from '@renderer/modules/webview-panels/store/ViewPanelState'
 import ViewPanelContainer from '../../webview-panels/components/ViewPanelContainer'
+import store, {
+  addPanel,
+  setArchitecture,
+  setIsMaximized,
+  setOsName,
+  setTheme
+} from '@renderer/store'
+import BrowserEvents from '@renderer/utils/browserEvents'
 
 export default function RootView() {
-  useEvents({
-    channel: 'BROWSER:GET_SYSTEM_INFO',
-    broadcast: true,
-    callback: (data: {
-      osName: string
-      systemTheme: string
-      architecture: string
-      isMaximized: boolean
-    }) => {
-      RootState.setIsMaximized(data.isMaximized)
-      RootState.setOsName(OSName[data.osName as keyof typeof OSName])
-      RootState.setTheme(Theme[data.systemTheme as keyof typeof Theme])
-      RootState.setArchitecture(Architecture[data.architecture as keyof typeof Architecture])
-    }
-  })
+  onMount(async () => {
+    const systemInfo = await BrowserEvents.invoke('BROWSER:GET_SYSTEM_INFO')
+    setOsName(OSName[systemInfo.osName as keyof typeof OSName])
+    setTheme(Theme[systemInfo.systemTheme as keyof typeof Theme])
+    setArchitecture(Architecture[systemInfo.architecture as keyof typeof Architecture])
+    setIsMaximized(systemInfo.isMaximized)
 
-  useEvents({
-    invoke: true,
-    channel: 'PANEL:GET_ALL',
-    callback: (data) => {
-      if (data.length === 0) {
-        ViewPanelState.addPanel({})
-      }
+    const panels = await BrowserEvents.invoke('PANEL:GET_ALL')
+    if (panels.length === 0) {
+      addPanel({})
     }
   })
 
@@ -41,28 +33,14 @@ export default function RootView() {
     channel: 'BROWSER:GET_IS_MAXIMIZE',
     broadcast: false,
     callback: (data) => {
-      RootState.setIsMaximized(data)
-    }
-  })
-
-  useEvents({
-    channel: 'baseWindow:toogleToolbar',
-    callback: () => {
-      ToolbarState.toggleToolbar()
-    }
-  })
-
-  useEvents({
-    channel: 'baseWindow:toogleSidebar',
-    callback: () => {
-      SidebarState.toggleSidebar()
+      setIsMaximized(data)
     }
   })
 
   useEvents({
     channel: 'PANEL:REQUEST_CREATE_NEW',
     callback: ({ url }) => {
-      ViewPanelState.addPanel({ url })
+      addPanel({ url })
     }
   })
 

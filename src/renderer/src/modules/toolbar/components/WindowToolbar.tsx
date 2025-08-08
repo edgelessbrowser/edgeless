@@ -10,10 +10,12 @@ import {
 } from '@tabler/icons-solidjs'
 import Box from '@renderer/modules/ui/components/Box'
 import BrowserEvents from '@renderer/utils/browserEvents'
-import SidebarState from '@renderer/modules/sidebar/store/SidebarState'
-import ToolbarState from '@renderer/modules/toolbar/store/ToolbarState'
+import store, {
+  addPanel,
+  toggleSidebar,
+  updateActivePanel
+} from '@renderer/store'
 import ToolbarButton from '@renderer/modules/toolbar/components/ToolbarButton'
-import ViewPanelState from '@renderer/modules/webview-panels/store/ViewPanelState'
 import WindowControlButtons from '@renderer/modules/toolbar/components/WindowControlButtons'
 
 function WindowToolbar() {
@@ -22,33 +24,29 @@ function WindowToolbar() {
     const el = e.target as HTMLFormElement
     const value = el.querySelector('input')?.value
 
-    ViewPanelState.updateActivePanel('url', value)
+    updateActivePanel('url', value)
 
-    const activePanel = ViewPanelState.getVisiblePanel()
     BrowserEvents.send('PANEL:LOAD_URL', {
-      id: activePanel?.id,
+      id: store.visiblePanel?.id,
       url: value
     })
   }
 
   const handleReload = () => {
-    const activePanel = ViewPanelState.getVisiblePanel()
     BrowserEvents.send('PANEL:RELOAD', {
-      id: activePanel?.id
+      id: store.visiblePanel?.id
     })
   }
 
   const handleGoBack = () => {
-    const activePanel = ViewPanelState.getVisiblePanel()
     BrowserEvents.send('PANEL:GO_BACK', {
-      id: activePanel?.id
+      id: store.visiblePanel?.id
     })
   }
 
   const handleGoForward = () => {
-    const activePanel = ViewPanelState.getVisiblePanel()
     BrowserEvents.send('PANEL:GO_FORWARD', {
-      id: activePanel?.id
+      id: store.visiblePanel?.id
     })
   }
 
@@ -56,13 +54,13 @@ function WindowToolbar() {
     <Box
       class="text-center flex items-center justify-center gap-3 win-drag transition-[height,opacity] duration-200 transform-gpu relative"
       style={{
-        height: ToolbarState.viewToolbar() ? '38px' : '0px',
-        opacity: ToolbarState.viewToolbar() ? 1 : 0,
-        'user-select': ToolbarState.viewToolbar() ? 'auto' : 'none'
+        height: store.viewToolbar ? '38px' : '0px',
+        opacity: store.viewToolbar ? 1 : 0,
+        'user-select': store.viewToolbar ? 'auto' : 'none'
       }}
     >
       <Box>
-        <ToolbarButton onClick={SidebarState.toggleSidebar} title="Toggle sidebar">
+        <ToolbarButton onClick={toggleSidebar} title="Toggle sidebar">
           <IconLayoutSidebar class="w-5 h-5" stroke="2" />
         </ToolbarButton>
 
@@ -94,7 +92,7 @@ function WindowToolbar() {
           `}
           type="text"
           title="Search or visit a website"
-          value={ViewPanelState.getActiveUrl()}
+          value={store.activeUrl}
         />
 
         <button
@@ -106,7 +104,7 @@ function WindowToolbar() {
         </button>
       </form>
       <Box class="win-no-drag">
-        <ToolbarButton onClick={ViewPanelState.addPanel} title="New tab">
+        <ToolbarButton onClick={() => addPanel({})} title="New tab">
           <IconPlus class="w-5 h-5" stroke="2" />
         </ToolbarButton>
         <ToolbarButton title="Options">

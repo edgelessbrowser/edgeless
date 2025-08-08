@@ -1,7 +1,8 @@
 import BrowserEvents from '../../../utils/browserEvents'
-import ViewPanelState, { PanelInterface } from '../store/ViewPanelState'
 import { createSignal, onMount, onCleanup, createEffect } from 'solid-js'
 import PanelBorder from './PanelBorder'
+import { PanelInterface } from '@renderer/shared/types'
+import store from '@renderer/store'
 
 function ViewPanel(props: { panel: PanelInterface }) {
   let panelContainerRef: HTMLDivElement | undefined
@@ -43,7 +44,7 @@ function ViewPanel(props: { panel: PanelInterface }) {
   })
 
   createEffect(() => {
-    if (ViewPanelState.highlightFocusedPanel()) {
+    if (store.highlightFocusedPanel()) {
       setIsFocusedPanel(props.panel?.isFocused ?? false)
     }
   })
