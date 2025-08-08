@@ -1,4 +1,4 @@
-import RootState from '@renderer/modules/root/store/RootState'
+import store from '@renderer/store'
 import Box from '@renderer/modules/ui/components/Box'
 import { OSName } from '@renderer/shared/types'
 import BrowserEvents from '@renderer/utils/browserEvents'
@@ -38,15 +38,15 @@ const WindowButton: Component<WindowButtonProps> = (props) => {
 export default function WindowControlButtons() {
   return (
     <>
-      <Show when={RootState.osName() === OSName.Windows}>
+      <Show when={store.osName === OSName.Windows}>
         <WindowsOs />
       </Show>
 
-      <Show when={RootState.osName() === OSName.Linux}>
+      <Show when={store.osName === OSName.Linux}>
         <LinuxOs />
       </Show>
 
-      <Show when={RootState.osName() === OSName.Mac}>
+      <Show when={store.osName === OSName.Mac}>
         <MacOs />
       </Show>
     </>
@@ -65,7 +65,7 @@ function WindowsOs() {
         {/* Maximize/Restore */}
         <WindowButton onClick={() => BrowserEvents.send('BROWSER:MAXIMIZE')} variant="windows">
           <Show
-            when={RootState.isMaximized()}
+            when={store.isMaximized}
             fallback={<IconSquare class="w-4 h-3.5 text-white" stroke="1.5" />}
           >
             <IconSquares class="w-4 h-3.5 text-white rotate-90" stroke="1.5" />
@@ -93,7 +93,7 @@ function LinuxOs() {
         {/* Maximize/Restore */}
         <WindowButton onClick={() => BrowserEvents.send('BROWSER:MAXIMIZE')} variant="linux">
           <Show
-            when={RootState.isMaximized()}
+            when={store.isMaximized}
             fallback={
               <IconSquare class="w-4 h-3.5 text-slate-300 group-hover:text-white" stroke="1.5" />
             }
