@@ -64,7 +64,7 @@ export default function RootView() {
     <EdgelessWindow>
       <WindowToolbar />
 
-      <Box class="flex h-full">
+      <Box class="flex flex-1 overflow-hidden">
         <Sidebar />
         <ViewPanelContainer />
       </Box>
