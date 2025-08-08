@@ -12,7 +12,6 @@ import { baseWindow } from './windows/baseWindow'
 import { containerWindow } from './windows/containerWindow'
 import { is } from '@electron-toolkit/utils'
 import { registerIpcHandlers } from './events'
-import contextMenu from 'electron-context-menu'
 
 const isWindows = process.platform === 'win32'
 
@@ -52,7 +51,8 @@ function createWindow(): void {
   container = containerWindow({ base, preload: join(__dirname, '../preload/index.js') })
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  const contextMenu = (await import('electron-context-menu')).default
   contextMenu()
   createWindow()
 
